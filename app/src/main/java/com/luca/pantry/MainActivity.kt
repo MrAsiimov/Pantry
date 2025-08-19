@@ -15,9 +15,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.animation.AnimationUtils
 //import android.view.animation.AnimationUtils
-import android.view.MotionEvent.*
 import android.view.animation.Animation
 import android.util.Log
+import android.view.MotionEvent
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,15 +39,15 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         //Set button
-        button_shape_config()
-        button_animation_config()
-
+        buttonShapeConfig()
+        buttonAnimationConfig()
+        setMenuButton()
 
     }
 
 
     //Set button menu config
-    fun button_shape_config(){
+    fun buttonShapeConfig(){
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
         //Take ImageButton ID
@@ -55,16 +56,34 @@ class MainActivity : AppCompatActivity() {
         menu_btn.background = shape
     }
 
-    fun button_animation_config(){
+    fun buttonAnimationConfig(){
         val menu_btn = findViewById<ImageButton>(R.id.menu_button)
 
-        menu_btn.setOnClickListener {
-            if (menu_btn.isPressed){
-                val anim: Animation = android.view.animation.AnimationUtils.loadAnimation(applicationContext, R.anim.button_scale_on_press)
-                menu_btn.startAnimation(anim)
+
+        menu_btn.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
             }
-            val anim: Animation = android.view.animation.AnimationUtils.loadAnimation(applicationContext, R.anim.button_scale_on_release)
-            menu_btn.startAnimation(anim)
+            false
+        }
+    }
+
+    //Set onClick method
+    fun setMenuButton(){
+        val menu_btn = findViewById<ImageButton>(R.id.menu_button)
+        menu_btn.setOnClickListener {
+            Toast.makeText(this, "Premuto il menu Button", Toast.LENGTH_SHORT).show()
         }
     }
 
