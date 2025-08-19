@@ -6,7 +6,7 @@
     tools:context="fragment.HeaderFragment">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/menu_button"
         android:layout_width="@dimen/button_menu"
         android:layout_height="@dimen/button_menu"
         android:layout_marginLeft="2dp"

@@ -1,5 +1,6 @@
 package com.luca.pantry
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +13,11 @@ import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import com.luca.pantry.R.id.imageButton
+import com.google.android.material.animation.AnimationUtils
+//import android.view.animation.AnimationUtils
+import android.view.MotionEvent.*
+import android.view.animation.Animation
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         //window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+
     }
 
     override fun onResume() {
@@ -33,17 +39,33 @@ class MainActivity : AppCompatActivity() {
 
         //Set button
         button_shape_config()
-
+        button_animation_config()
 
 
     }
 
+
+    //Set button menu config
     fun button_shape_config(){
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
         //Take ImageButton ID
-        val menu_btn: ImageButton = findViewById(imageButton)
+        val menu_btn: ImageButton = findViewById(R.id.menu_button)
         //Set shape to button
         menu_btn.background = shape
     }
+
+    fun button_animation_config(){
+        val menu_btn = findViewById<ImageButton>(R.id.menu_button)
+
+        menu_btn.setOnClickListener {
+            if (menu_btn.isPressed){
+                val anim: Animation = android.view.animation.AnimationUtils.loadAnimation(applicationContext, R.anim.button_scale_on_press)
+                menu_btn.startAnimation(anim)
+            }
+            val anim: Animation = android.view.animation.AnimationUtils.loadAnimation(applicationContext, R.anim.button_scale_on_release)
+            menu_btn.startAnimation(anim)
+        }
+    }
+
 }
