@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.luca.pantry.R.id.imageButton
 
 class MainActivity : AppCompatActivity() {
@@ -24,15 +25,25 @@ class MainActivity : AppCompatActivity() {
             window.attributes = lp
         }*/
 
-
         //window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
     }
 
     override fun onResume() {
         super.onResume()
-        val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
-        val menu_btn: ImageButton = findViewById(imageButton)
-        menu_btn.background = shape
 
+        //Set button
+        button_shape_config()
+
+
+
+    }
+
+    fun button_shape_config(){
+        //Take shape
+        val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
+        //Take ImageButton ID
+        val menu_btn: ImageButton = findViewById(imageButton)
+        //Set shape to button
+        menu_btn.background = shape
     }
 }

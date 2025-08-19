@@ -10,10 +10,11 @@
     tools:context=".MainActivity">
 
   <androidx.fragment.app.FragmentContainerView
-      android:id="@+id/fragmentContainerView"
+      android:id="@+id/fragmentHeader"
       android:name="fragment.HeaderFragment"
       android:layout_width="match_parent"
-      android:layout_height="60dp"
+      android:layout_height="@dimen/header_height"
+      android:background="@color/purple_200"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       tools:layout_editor_absoluteX="151dp"
