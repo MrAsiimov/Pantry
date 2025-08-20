@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    //Set button menu config
+    //Set button shape
     fun buttonShapeConfig(){
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
 
     fun buttonAnimationConfig(){
         val menu_btn = findViewById<ImageButton>(R.id.menu_button)
-
 
         menu_btn.setOnTouchListener { v, event ->
             when (event.action) {
@@ -86,5 +85,4 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Premuto il menu Button", Toast.LENGTH_SHORT).show()
         }
     }
-
 }
