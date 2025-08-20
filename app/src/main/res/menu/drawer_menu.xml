@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group>
+        <item android:title="@string/menu_home"
+            android:id="@+id/menu_home" />
+        <item android:title="@string/menu_container"
+            android:id="@+id/menu_container" />
+        <item android:title="@string/menu_items"
+            android:id="@+id/menu_items"/>
+        <item android:title="@string/menu_expiring_products"
+            android:id="@+id/menu_expiring_product"/>
+    </group>
+        <item android:title="@string/menu_settings"
+        android:id="@+id/menu_settings"/>
 </menu>

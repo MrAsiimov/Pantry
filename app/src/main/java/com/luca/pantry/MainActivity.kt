@@ -19,19 +19,19 @@ import android.view.animation.Animation
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import com.luca.pantry.R.id.menu_button
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val lp = window.attributes
-            lp.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            window.attributes = lp
-        }*/
 
-        //window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
     }
 
@@ -51,13 +51,13 @@ class MainActivity : AppCompatActivity() {
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
         //Take ImageButton ID
-        val menu_btn: ImageButton = findViewById(R.id.menu_button)
+        val menu_btn: ImageButton = findViewById(menu_button)
         //Set shape to button
         menu_btn.background = shape
     }
 
     fun buttonAnimationConfig(){
-        val menu_btn = findViewById<ImageButton>(R.id.menu_button)
+        val menu_btn = findViewById<ImageButton>(menu_button)
 
         menu_btn.setOnTouchListener { v, event ->
             when (event.action) {
@@ -80,9 +80,23 @@ class MainActivity : AppCompatActivity() {
 
     //Set onClick method
     fun setMenuButton(){
-        val menu_btn = findViewById<ImageButton>(R.id.menu_button)
+        drawerLayout = findViewById(R.id.main)
+        navView = findViewById(R.id.nav_view)
+
+        navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> Toast.makeText(this, "Home premuto", Toast.LENGTH_SHORT).show()
+                R.id.menu_container -> Toast.makeText(this, "Container premuto", Toast.LENGTH_SHORT).show()
+                R.id.menu_items -> Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
+                R.id.menu_expiring_product -> Toast.makeText(this, "Prodotti in scadenza premuto", Toast.LENGTH_SHORT).show()
+                R.id.menu_settings -> Toast.makeText(this, "Impostazioni premuto", Toast.LENGTH_SHORT).show()
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+        val menu_btn = findViewById<ImageButton>(menu_button)
         menu_btn.setOnClickListener {
-            Toast.makeText(this, "Premuto il menu Button", Toast.LENGTH_SHORT).show()
+            drawerLayout.openDrawer(GravityCompat.START)
         }
     }
 }

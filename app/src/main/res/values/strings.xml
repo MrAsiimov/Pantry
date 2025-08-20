@@ -2,5 +2,9 @@
     <string name="app_name">Pantry</string>
     
     <string name="button_menu">Menu</string>
-    
+    <string name="menu_home">Home</string>
+    <string name="menu_container">Contenitori</string>
+    <string name="menu_items">Prodotti</string>
+    <string name="menu_expiring_products">Prodotti in scadenza</string>
+    <string name="menu_settings">Impostazioni</string>
 </resources>
