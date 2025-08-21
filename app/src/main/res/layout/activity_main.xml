@@ -20,11 +20,6 @@
         android:layout_height="@dimen/header_height"
         android:background="@color/purple_200" />
 
-    <Switch
-        android:id="@+id/dark_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Switch" />
   </LinearLayout>
 
   <com.google.android.material.navigation.NavigationView

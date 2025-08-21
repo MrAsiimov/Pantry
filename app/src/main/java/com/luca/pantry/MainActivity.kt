@@ -54,8 +54,6 @@ class MainActivity : AppCompatActivity() {
         buttonAnimationConfig()
         setMenuButton()
 
-        darkmode()
-
     }
 
 
@@ -112,6 +110,8 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
     }
+
+    /*
     fun darkmode(){
         themeSwitch = findViewById(R.id.dark_mode)
         // Carica lo stato salvato
@@ -132,5 +132,5 @@ class MainActivity : AppCompatActivity() {
                 .putBoolean("dark_mode", isChecked)
                 .apply()
         }
-    }
+    }*/
 }
