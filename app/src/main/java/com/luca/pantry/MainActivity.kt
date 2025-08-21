@@ -20,6 +20,7 @@ import android.view.animation.Animation
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
@@ -27,22 +28,24 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.luca.pantry.R.id.menu_button
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
+class MainActivity : BaseActivity() {
     private lateinit var themeSwitch: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Load the setting about theme
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         val mode = if (prefs.getBoolean("dark_mode", false))
             AppCompatDelegate.MODE_NIGHT_YES
         else
             AppCompatDelegate.MODE_NIGHT_NO
         AppCompatDelegate.setDefaultNightMode(mode)
+
         setContentView(R.layout.activity_main)
 
-
+        val txview = findViewById<TextView>(R.id.textView)
+        txview.text = "banana"
 
     }
 
@@ -50,14 +53,14 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         //Set button menu
-        buttonShapeConfig()
-        buttonAnimationConfig()
-        setMenuButton()
+        //buttonShapeConfig()
+        //buttonAnimationConfig()
+        //setMenuButton()
 
     }
 
 
-    //Set button shape
+    /*//Set button shape
     fun buttonShapeConfig(){
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         menu_btn.background = shape
     }
 
+    //Set animation to menu button
     fun buttonAnimationConfig(){
         val menu_btn = findViewById<ImageButton>(menu_button)
 
@@ -87,29 +91,9 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
-    }
+    }*/
 
-    //Set onClick method
-    fun setMenuButton(){
-        drawerLayout = findViewById(R.id.main)
-        navView = findViewById(R.id.nav_view)
 
-        navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_home -> Toast.makeText(this, "Home premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_container -> Toast.makeText(this, "Container premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_items -> Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_expiring_product -> Toast.makeText(this, "Prodotti in scadenza premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_settings -> Toast.makeText(this, "Impostazioni premuto", Toast.LENGTH_SHORT).show()
-            }
-            drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        }
-        val menu_btn = findViewById<ImageButton>(menu_button)
-        menu_btn.setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.START)
-        }
-    }
 
     /*
     fun darkmode(){
