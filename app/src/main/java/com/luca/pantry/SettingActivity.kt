@@ -13,9 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.luca.pantry.ui.theme.PantryTheme
 
-class SettingActivity : ComponentActivity() {
+class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_setting)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
 
     }
 }

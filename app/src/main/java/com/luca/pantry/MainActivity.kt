@@ -15,7 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.animation.AnimationUtils
-//import android.view.animation.AnimationUtils
 import android.view.animation.Animation
 import android.util.Log
 import android.view.MotionEvent
@@ -43,9 +42,6 @@ class MainActivity : BaseActivity() {
         AppCompatDelegate.setDefaultNightMode(mode)
 
         setContentView(R.layout.activity_main)
-
-        val txview = findViewById<TextView>(R.id.textView)
-        txview.text = "banana"
 
     }
 
