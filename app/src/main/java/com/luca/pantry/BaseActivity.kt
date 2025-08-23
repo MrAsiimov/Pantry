@@ -1,8 +1,11 @@
 package com.luca.pantry
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat.getDrawable
@@ -30,23 +33,50 @@ abstract class BaseActivity: AppCompatActivity() {
 
     private fun setupDrawer(navView: NavigationView) {
         navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_home -> Toast.makeText(this, "Home premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_container -> Toast.makeText(this, "Container premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_items -> Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_expiring_product -> Toast.makeText(this, "Prodotti in scadenza premuto", Toast.LENGTH_SHORT).show()
-                R.id.menu_settings -> Toast.makeText(this, "Impostazioni premuto", Toast.LENGTH_SHORT).show()
+            val navIntent: Intent? = when (item.itemId) {
+                R.id.menu_home -> {
+                    Intent(this, MainActivity::class.java)
+                }
+                R.id.menu_container -> {
+                    Toast.makeText(this, "Container premuto", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                R.id.menu_items -> {
+                    Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                R.id.menu_expiring_product -> {
+                    Toast.makeText(this, "Prodotti in scadenza premuto", Toast.LENGTH_SHORT).show()
+                    null
+                }
+                R.id.menu_settings -> {
+                    Intent(this, SettingActivity::class.java)
+                }
+                else -> null
             }
+
+            navIntent?.let { intentToLaunch ->
+                val targetClass: Class<*>? = intentToLaunch
+                    .component
+                    ?.className
+                    ?.let { name -> Class.forName(name) }
+
+                if (this::class.java != targetClass) {
+                    startActivity(intentToLaunch)
+                }
+            }
+
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
         val menu_btn = findViewById<ImageButton>(menu_button)
         menu_btn.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
     }
 
-    fun buttonAnimationConfig(){
+    private fun buttonAnimationConfig(){
         val menu_btn = findViewById<ImageButton>(menu_button)
 
         menu_btn.setOnTouchListener { v, event ->
@@ -68,12 +98,24 @@ abstract class BaseActivity: AppCompatActivity() {
         }
     }
 
-    fun buttonShapeConfig(){
+    private fun buttonShapeConfig(){
         //Take shape
         val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
         //Take ImageButton ID
         val menu_btn: ImageButton = findViewById(menu_button)
         //Set shape to button
         menu_btn.background = shape
+    }
+
+    fun setTextHeader(text: String){
+        val text_header = findViewById<TextView>(R.id.text_header)
+
+        when(text){
+            "Home" -> text_header.setText(R.string.text_header_home)
+            "Container" -> text_header.setText(R.string.text_header_container)
+            "Prodotti" -> text_header.setText(R.string.text_header_items)
+            "Prodotti in scadenza" -> text_header.setText(R.string.text_header_expiring_products)
+            "Impostazioni" -> text_header.setText(R.string.text_header_settings)
+        }
     }
 }

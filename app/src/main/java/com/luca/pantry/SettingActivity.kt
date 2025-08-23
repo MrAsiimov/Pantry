@@ -1,6 +1,7 @@
 package com.luca.pantry
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,9 +17,9 @@ import com.luca.pantry.ui.theme.PantryTheme
 class SettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_setting)
 
+        setTextHeader("Impostazioni")
 
     }
 

@@ -43,6 +43,7 @@ class MainActivity : BaseActivity() {
 
         setContentView(R.layout.activity_main)
 
+        setTextHeader("Home")
     }
 
     override fun onResume() {
