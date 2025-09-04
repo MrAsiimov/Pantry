@@ -28,8 +28,6 @@ import com.google.android.material.navigation.NavigationView
 import com.luca.pantry.R.id.menu_button
 
 class MainActivity : BaseActivity() {
-    private lateinit var themeSwitch: Switch
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,33 +47,6 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        //Set button menu
-        //buttonShapeConfig()
-        //buttonAnimationConfig()
-        //setMenuButton()
 
     }
-
-    /*
-    fun darkmode(){
-        themeSwitch = findViewById(R.id.dark_mode)
-        // Carica lo stato salvato
-        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_mode", false)
-        themeSwitch.isChecked = isDark
-
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // Cambia tema
-            val mode = if (isChecked)
-                AppCompatDelegate.MODE_NIGHT_YES
-            else
-                AppCompatDelegate.MODE_NIGHT_NO
-            AppCompatDelegate.setDefaultNightMode(mode)
-
-            // Salva preferenza
-            prefs.edit()
-                .putBoolean("dark_mode", isChecked)
-                .apply()
-        }
-    }*/
 }
