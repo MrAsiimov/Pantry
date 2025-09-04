@@ -56,42 +56,6 @@ class MainActivity : BaseActivity() {
 
     }
 
-
-    /*//Set button shape
-    fun buttonShapeConfig(){
-        //Take shape
-        val shape: Drawable? = getDrawable(resources, R.drawable.rounded_menu_button, getTheme())
-        //Take ImageButton ID
-        val menu_btn: ImageButton = findViewById(menu_button)
-        //Set shape to button
-        menu_btn.background = shape
-    }
-
-    //Set animation to menu button
-    fun buttonAnimationConfig(){
-        val menu_btn = findViewById<ImageButton>(menu_button)
-
-        menu_btn.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
-                    v.startAnimation(down)
-                }
-                MotionEvent.ACTION_UP -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
-                    v.startAnimation(up)
-                }
-                MotionEvent.ACTION_CANCEL -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
-                    v.startAnimation(up)
-                }
-            }
-            false
-        }
-    }*/
-
-
-
     /*
     fun darkmode(){
         themeSwitch = findViewById(R.id.dark_mode)
