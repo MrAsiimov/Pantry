@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.luca.pantry.Add.ui.theme.PantryTheme
+import com.luca.pantry.ui.theme.PantryTheme
 import com.luca.pantry.BaseActivity
 import com.luca.pantry.R
 
