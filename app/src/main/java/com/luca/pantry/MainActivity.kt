@@ -1,32 +1,14 @@
 package com.luca.pantry
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import android.widget.ImageButton
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat.getDrawable
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import com.google.android.material.animation.AnimationUtils
-import android.view.animation.Animation
-import android.util.Log
-import android.view.MotionEvent
-import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
-import com.luca.pantry.R.id.menu_button
+import com.luca.pantry.Add.AddContainerActivity
+import com.luca.pantry.Add.AddItemActivity
 
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +30,7 @@ class MainActivity : BaseActivity() {
         add_button.setOnClickListener {
             val popupMenu = PopupMenu(this, add_button)
 
-            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+            popupMenu.menuInflater.inflate(R.menu.popup_menu_add, popupMenu.menu)
 
             //Force icon on menu (Use try to prevent error)
             try {
@@ -63,8 +45,19 @@ class MainActivity : BaseActivity() {
             }
 
             popupMenu.setOnMenuItemClickListener { item ->
-                Toast.makeText(this, "You Clicked " + item.title, Toast.LENGTH_SHORT).show()
-                true
+                when (item.itemId) {
+                    R.id.add_item -> {
+                        val intent = Intent(this, AddItemActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.add_container -> {
+                        val intent = Intent(this, AddContainerActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    else -> false
+                }
             }
             popupMenu.show()
         }

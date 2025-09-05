@@ -116,6 +116,8 @@ abstract class BaseActivity: AppCompatActivity() {
             "Prodotti" -> text_header.setText(R.string.text_header_items)
             "Prodotti in scadenza" -> text_header.setText(R.string.text_header_expiring_products)
             "Impostazioni" -> text_header.setText(R.string.text_header_settings)
+            "Aggiungi prodotto" -> text_header.setText(R.string.text_header_add_item_activity)
+            "Aggiungi contenitore" -> text_header.setText(R.string.text_header_add_container_activity)
         }
     }
 }

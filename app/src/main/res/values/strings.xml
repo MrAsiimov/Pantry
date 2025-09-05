@@ -17,7 +17,9 @@
     <string name="text_header_items">Prodotti</string>
     <string name="text_header_expiring_products">Prodotti in scadenza</string>
     <string name="text_header_settings">Impostazioni</string>
-    
+    <string name="text_header_add_item_activity">Aggiungi prodotto</string>
+    <string name="text_header_add_container_activity">Aggiungi contenitore</string>
+
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_basic">BasicActivity</string>
     <string name="title_activity_main">MainActivity</string>
