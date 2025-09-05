@@ -22,6 +22,7 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -40,8 +41,33 @@ class MainActivity : BaseActivity() {
         AppCompatDelegate.setDefaultNightMode(mode)
 
         setContentView(R.layout.activity_main)
-
         setTextHeader("Home")
+
+        //Create a pop-up menu for the add button (Add item/ add container)
+        val add_button = findViewById<ImageButton>(R.id.add_button_home)
+        add_button.setOnClickListener {
+            val popupMenu = PopupMenu(this, add_button)
+
+            popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+
+            //Force icon on menu (Use try to prevent error)
+            try {
+                val fields = popupMenu.javaClass.getDeclaredField("mPopup")
+                fields.isAccessible = true
+                val menuPopupHelper = fields.get(popupMenu)
+                val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
+                val setForceIcons = classPopupHelper.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                setForceIcons.invoke(menuPopupHelper, true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                Toast.makeText(this, "You Clicked " + item.title, Toast.LENGTH_SHORT).show()
+                true
+            }
+            popupMenu.show()
+        }
     }
 
     override fun onResume() {

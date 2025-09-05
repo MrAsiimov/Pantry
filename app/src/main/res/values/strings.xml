@@ -9,6 +9,9 @@
     <string name="menu_expiring_products">Prodotti in scadenza</string>
     <string name="menu_settings">Impostazioni</string>
 
+    <string name="popup_menu_add_item">Aggiungi prodotto</string>
+    <string name="popup_menu_add_container">Aggiungi contenitore</string>
+
     <string name="text_header_home">Home</string>
     <string name="text_header_container">Contenitori</string>
     <string name="text_header_items">Prodotti</string>
