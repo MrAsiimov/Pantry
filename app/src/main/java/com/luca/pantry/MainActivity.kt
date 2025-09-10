@@ -25,7 +25,18 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         setTextHeader("Home")
 
-        //Create a pop-up menu for the add button (Add item/ add container)
+        popupMenuCreate()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+
+    }
+
+    //Create a pop-up menu for the add button (Add item/ add container)
+    private fun popupMenuCreate(){
         val add_button = findViewById<ImageButton>(R.id.add_button_home)
         add_button.setOnClickListener {
             val popupMenu = PopupMenu(this, add_button)
@@ -61,11 +72,5 @@ class MainActivity : BaseActivity() {
             }
             popupMenu.show()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-
     }
 }
