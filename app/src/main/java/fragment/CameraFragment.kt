@@ -1,12 +1,13 @@
 package fragment
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -15,9 +16,16 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 
 class CameraFragment : Fragment() {
+    val cameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            isGranted ->
+        if (isGranted) {
+            startCamera()
+        } else {
+            Toast.makeText(requireContext(), R.string.permission_denied, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private lateinit var previewView: PreviewView
-    private val CAMERA_PERMISSION = Manifest.permission.CAMERA
-    private val PERM_REQ = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +42,17 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         previewView = view.findViewById(R.id.preview_view)
-        if (ContextCompat.checkSelfPermission(requireContext(), CAMERA_PERMISSION)
-            == PackageManager.PERMISSION_GRANTED) {
+
+
+        //Verify camera permission
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
         } else {
-            requestPermissions(arrayOf(CAMERA_PERMISSION), PERM_REQ)
+            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
         }
     }
+
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
