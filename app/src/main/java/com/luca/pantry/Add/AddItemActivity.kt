@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
-import android.widget.ImageButton
 import com.luca.pantry.BaseActivity
 import com.luca.pantry.R
-import com.luca.pantry.R.id.menu_button
 import fragment.CameraFragment
 
 class AddItemActivity : BaseActivity() {
