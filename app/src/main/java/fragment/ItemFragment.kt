@@ -28,6 +28,7 @@ class ItemFragment : Fragment() {
     private lateinit var textContainerEdit: AutoCompleteTextView
     private lateinit var btnSave: MaterialButton
     private lateinit var npQuantity: NumberPicker
+    private lateinit var textItemName: TextInputLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +52,7 @@ class ItemFragment : Fragment() {
         textContainerEdit = view.findViewById(R.id.text_container_edit)
         btnSave = view.findViewById(R.id.btn_save)
         npQuantity = view.findViewById(R.id.np_quantity)
+        textItemName = view.findViewById(R.id.text_item_name)
 
         setNumberPicker()
         setupDatePicker()
@@ -96,7 +98,7 @@ class ItemFragment : Fragment() {
             val date = textDateEdit.text.toString()
             val container = textContainerEdit.text.toString()
 
-            Toast.makeText(context, "Quantity: ${npQuantity.value}\nNome Prodotto: ${textContainerEdit.text}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Quantity: ${npQuantity.value}\nNome Prodotto: ${textItemName.editText?.text}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -130,9 +132,9 @@ class ItemFragment : Fragment() {
         }
 
         npQuantity.apply {
-            minValue = 1
+            minValue = 0
             maxValue = 100
-            value = 1
+            value = 0
 
             setFormatter { displayedValues ->
                 if (displayedValues == value) displayedValues.toString()
