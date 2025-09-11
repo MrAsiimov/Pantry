@@ -1,7 +1,9 @@
 package com.luca.pantry
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageButton
@@ -17,6 +19,8 @@ import com.luca.pantry.R.id.menu_button
 abstract class BaseActivity: AppCompatActivity() {
     protected lateinit var navView: NavigationView
     protected lateinit var drawerLayout: DrawerLayout
+
+
 
     override fun setContentView(layoutResId: Int) {
         super.setContentView(R.layout.activity_base)

@@ -2,6 +2,8 @@
     <string name="app_name">Pantry</string>
 
     <string name="button_menu">Menu</string>
+    <string name="button_add_manually">Aggiungi manualmente</string>
+    <string name="button_cancel">Annulla</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_container">Contenitori</string>

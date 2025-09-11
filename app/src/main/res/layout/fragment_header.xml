@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_header_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/header_height"
     android:background="@color/purple_200"
@@ -10,7 +11,7 @@
         android:id="@+id/menu_button"
         android:layout_width="@dimen/button_menu"
         android:layout_height="@dimen/button_menu"
-        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
         android:contentDescription="@string/button_menu"
         android:src="@drawable/icon_menu"
@@ -20,7 +21,9 @@
         android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_header_height"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:textSize="24sp"
         android:text="prova testo" />
 </FrameLayout>

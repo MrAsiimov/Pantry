@@ -15,7 +15,7 @@ class AddItemActivity : BaseActivity() {
 
         // Carica subito la CameraView
         supportFragmentManager.beginTransaction()
-            .replace(R.id.content_frame, CameraFragment())
+            .replace(R.id.camera_fragment, CameraFragment())
             .commit()
 
     }

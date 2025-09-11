@@ -14,25 +14,30 @@
         <activity
             android:name=".Add.AddContainerActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_container"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".Add.AddItemActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_item"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".BaseActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_basic"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".SettingActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_setting"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

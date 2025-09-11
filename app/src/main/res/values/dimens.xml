@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="header_height">56dp</dimen>
-    <dimen name="button_menu">52dp</dimen>
+    
     <dimen name="text_header_height">50dp</dimen>
+
+    <dimen name="button_menu">52dp</dimen>
     <dimen name="round_button_size">56dp</dimen>
     <dimen name="button_margin">16dp</dimen>
+    <dimen name="button_height_medium">56dp</dimen>
+    <dimen name="button_width_medium">200dp</dimen>
 
 </resources>

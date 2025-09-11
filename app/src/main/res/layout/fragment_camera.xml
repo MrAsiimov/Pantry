@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/camera_frame_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- PreviewView mostra direttamente l’anteprima CameraX -->
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
