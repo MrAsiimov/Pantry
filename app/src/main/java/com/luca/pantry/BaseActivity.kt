@@ -1,5 +1,6 @@
 package com.luca.pantry
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
@@ -80,6 +81,7 @@ abstract class BaseActivity: AppCompatActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun buttonAnimationConfig(){
         val menu_btn = findViewById<ImageButton>(menu_button)
 
