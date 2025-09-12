@@ -13,6 +13,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.NumberPicker
 import android.widget.Toast
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -58,7 +60,9 @@ class ItemFragment : Fragment() {
         setupDatePicker()
         setupContainerDropdown()
         setupSaveButton()
-        setButtons()
+        setupCancelButton()
+        buttonAnimationConfig()
+        setButtonsNP()
     }
 
     private fun setupDatePicker() {
@@ -71,9 +75,15 @@ class ItemFragment : Fragment() {
     }
 
     private fun showDatePicker(){
+        val today = MaterialDatePicker.todayInUtcMilliseconds()
+        val constraints = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointForward.from(today))
+            .build()
+
         val picker = MaterialDatePicker.Builder
             .datePicker()
             .setTitleText("Seleziona scadenza")
+            .setCalendarConstraints(constraints)
             .build()
 
         picker.show(parentFragmentManager, "DATE_PICKER")
@@ -102,7 +112,14 @@ class ItemFragment : Fragment() {
         }
     }
 
-    private fun setButtons() {
+    private fun setupCancelButton() {
+        val cancel_btn = view?.findViewById<MaterialButton>(R.id.btn_cancel)
+        cancel_btn?.setOnClickListener {
+            activity?.finish()
+        }
+    }
+
+    private fun setButtonsNP() {
         val decrement_btn = view?.findViewById<MaterialButton>(R.id.btn_decrement)
         val increment_btn = view?.findViewById<MaterialButton>(R.id.btn_increment)
 
@@ -140,6 +157,88 @@ class ItemFragment : Fragment() {
                 if (displayedValues == value) displayedValues.toString()
                 else ""
             }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun buttonAnimationConfig() {
+        btnSave = view?.findViewById(R.id.btn_save)!!
+        var cancel_btn = view?.findViewById<MaterialButton>(R.id.btn_cancel)
+        val decrement_btn = view?.findViewById<MaterialButton>(R.id.btn_decrement)
+        val increment_btn = view?.findViewById<MaterialButton>(R.id.btn_increment)
+
+        btnSave.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
+        }
+
+        cancel_btn?.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
+        }
+
+        decrement_btn?.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
+        }
+
+        increment_btn?.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
         }
     }
 }

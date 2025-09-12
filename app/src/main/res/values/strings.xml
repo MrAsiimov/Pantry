@@ -27,6 +27,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_add_item">AddItemActivity</string>
     <string name="title_activity_add_container">AddContainerActivity</string>
+    <string name="title_activity_empty">EmptyActivity</string>
 
     <string name="settings_dark_mode">Modalità scura</string>
 
