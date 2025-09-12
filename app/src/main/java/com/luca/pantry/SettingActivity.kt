@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.luca.pantry.ui.theme.PantryTheme
+import androidx.core.content.edit
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingActivity : BaseActivity() {
-    private lateinit var themeSwitch: Switch
+    private lateinit var themeSwitch: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +52,9 @@ class SettingActivity : BaseActivity() {
             AppCompatDelegate.setDefaultNightMode(mode)
 
             // Salva preferenza
-            prefs.edit()
-                .putBoolean("dark_mode", isChecked)
-                .apply()
+            prefs.edit {
+                putBoolean("dark_mode", isChecked)
+            }
         }
     }
 }

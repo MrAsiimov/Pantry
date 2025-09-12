@@ -17,7 +17,7 @@
         android:src="@drawable/icon_menu"
         android:background="@drawable/rounded_menu_button" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_header_height"
@@ -25,5 +25,5 @@
         android:layout_marginTop="2dp"
         android:gravity="center"
         android:textSize="24sp"
-        android:text="prova testo" />
+        android:text="prova testo"/>
 </FrameLayout>
