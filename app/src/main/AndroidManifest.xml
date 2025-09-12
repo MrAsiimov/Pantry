@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,44 +16,44 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pantry">
         <activity
+            android:name=".EmptyActivity"
+            android:exported="false"
+            android:label="@string/title_activity_empy"
+            android:theme="@style/Theme.Pantry" />
+        <activity
             android:name=".Add.AddContainerActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_container"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".Add.AddItemActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_item"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".BaseActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_basic"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".SettingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
-
-    <uses-feature android:name="android.hardware.camera" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
