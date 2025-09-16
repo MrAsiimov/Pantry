@@ -13,13 +13,17 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.NumberPicker
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.luca.pantry.EntityDB.Prodotto
+import com.luca.pantry.PantryApp
 import com.luca.pantry.R
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,6 +36,7 @@ class ItemFragment : Fragment() {
     private lateinit var btnSave: MaterialButton
     private lateinit var npQuantity: NumberPicker
     private lateinit var textItemName: TextInputLayout
+    private lateinit var textBarcodeEdit: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +61,7 @@ class ItemFragment : Fragment() {
         btnSave = view.findViewById(R.id.btn_save)
         npQuantity = view.findViewById(R.id.np_quantity)
         textItemName = view.findViewById(R.id.text_item_name)
+        textBarcodeEdit = view.findViewById(R.id.text_barcode_edit)
 
         val barcodeText = view.findViewById<TextInputLayout>(R.id.text_barcode)
 
@@ -115,10 +121,36 @@ class ItemFragment : Fragment() {
 
     private fun setupSaveButton() {
         btnSave.setOnClickListener {
+            val quantity = npQuantity.value.toString().toIntOrNull() ?: 0
+            val itemName = textItemName.editText?.text.toString()
             val date = textDateEdit.text.toString()
             val container = textContainerEdit.text.toString()
+            val barcode = textBarcodeEdit.text.toString()
 
-            Toast.makeText(context, "Quantity: ${npQuantity.value}\nNome Prodotto: ${textItemName.editText?.text}", Toast.LENGTH_SHORT).show()
+            if (quantity == 0 || itemName.isEmpty() || date.isEmpty() || container.isEmpty() || barcode.isEmpty()) {
+                Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
+            } else {
+                val prodotto = Prodotto(
+                    itemName,
+                    date,
+                    container,
+                    quantity,
+                    barcode)
+
+                lifecycleScope.launch {
+                    PantryApp.database.prodottoDao().additem(prodotto)
+                    Toast.makeText(requireContext(), "Prodotto aggiunto", Toast.LENGTH_SHORT).show()
+
+                    // TODO: aggiungere il cambio view alla view "Vista di tutti i prodotti"
+                    
+                    //Vista su log degli item aggiunti (momentaneo)
+                    val prodottiSalvati = PantryApp.database.prodottoDao().getAllItems()
+                    for (p in prodottiSalvati) {
+                        Log.d("DATABASE", "Nome prodotto: ${p.productName} - Scadenza: ${p.expiringDate} - Contenitore: ${p.container} - Quantità: ${p.quantity} - Barcode: ${p.barcode}")
+                    }
+                }
+            }
+
         }
     }
 
