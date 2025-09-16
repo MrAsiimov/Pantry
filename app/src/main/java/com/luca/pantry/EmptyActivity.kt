@@ -1,7 +1,8 @@
 package com.luca.pantry
 
 import android.os.Bundle
-import fragment.ItemFragment
+import androidx.core.os.bundleOf
+import com.luca.pantry.fragment.ItemFragment
 
 class EmptyActivity : BaseActivity() {
     private lateinit var origin: String
@@ -9,13 +10,6 @@ class EmptyActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_empty)
 
-        origin = intent.getStringExtra("ORIGIN").toString()
-
-        when (origin) {
-            "addmanually" -> {
-                setTextHeader("Aggiungi prodotto")
-            }
-        }
         loadFrameLayout()
     }
 
@@ -30,8 +24,13 @@ class EmptyActivity : BaseActivity() {
 
         when (origin) {
             "addmanually" -> {
+                setTextHeader("Aggiungi prodotto")
+
+                val itemFragment = ItemFragment()
+                itemFragment.arguments = bundleOf("showBarcode" to true)
+
                 supportFragmentManager.beginTransaction()
-                    .replace(fragment, ItemFragment())
+                    .replace(fragment, itemFragment)
                     .commit()
             }
         }

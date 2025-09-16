@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.firebase.bom)
-    implementation(libs.firebase.analytics)
+    implementation ("androidx.room:room-runtime:2.8.0")
+    kapt ("androidx.room:room-compiler:2.8.0")
     implementation(libs.androidx.camera.core)
     implementation (libs.androidx.camera.camera2)
     implementation (libs.androidx.camera.lifecycle)

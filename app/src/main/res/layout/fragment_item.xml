@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_item"
     android:layout_margin="16dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -159,6 +160,23 @@
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginStart="12dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_barcode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Barcode"
+                    app:layout_constraintTop_toBottomOf="@id/text_container"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="invisible"
+                    android:layout_marginTop="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/text_barcode_edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

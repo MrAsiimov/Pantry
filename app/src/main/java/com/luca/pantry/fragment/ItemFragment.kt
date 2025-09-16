@@ -1,4 +1,4 @@
-package fragment
+package com.luca.pantry.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.NumberPicker
@@ -55,6 +56,15 @@ class ItemFragment : Fragment() {
         btnSave = view.findViewById(R.id.btn_save)
         npQuantity = view.findViewById(R.id.np_quantity)
         textItemName = view.findViewById(R.id.text_item_name)
+
+        val barcodeText = view.findViewById<TextInputLayout>(R.id.text_barcode)
+
+        val showBarcode = arguments?.getBoolean("showBarcode") ?: false
+        if (showBarcode) {
+            barcodeText.visibility = View.VISIBLE
+        } else {
+            barcodeText.visibility = View.GONE
+        }
 
         setNumberPicker()
         setupDatePicker()
@@ -170,15 +180,15 @@ class ItemFragment : Fragment() {
         btnSave.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
                     v.startAnimation(down)
                 }
                 MotionEvent.ACTION_UP -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
                 MotionEvent.ACTION_CANCEL -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
             }
@@ -188,17 +198,17 @@ class ItemFragment : Fragment() {
         cancel_btn?.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
                     v.startAnimation(down)
                 }
 
                 MotionEvent.ACTION_UP -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
 
                 MotionEvent.ACTION_CANCEL -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
             }
@@ -208,15 +218,15 @@ class ItemFragment : Fragment() {
         decrement_btn?.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
                     v.startAnimation(down)
                 }
                 MotionEvent.ACTION_UP -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
                 MotionEvent.ACTION_CANCEL -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
             }
@@ -226,15 +236,15 @@ class ItemFragment : Fragment() {
         increment_btn?.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    val down = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
                     v.startAnimation(down)
                 }
                 MotionEvent.ACTION_UP -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
                 MotionEvent.ACTION_CANCEL -> {
-                    val up = android.view.animation.AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
                     v.startAnimation(up)
                 }
             }

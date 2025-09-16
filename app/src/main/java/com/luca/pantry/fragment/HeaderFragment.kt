@@ -1,4 +1,4 @@
-package fragment
+package com.luca.pantry.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

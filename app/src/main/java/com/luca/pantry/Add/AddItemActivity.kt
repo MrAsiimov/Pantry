@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
-import android.widget.Button
 import com.google.android.material.button.MaterialButton
 import com.luca.pantry.BaseActivity
 import com.luca.pantry.EmptyActivity
 import com.luca.pantry.R
-import fragment.CameraFragment
+import com.luca.pantry.fragment.CameraFragment
 
 class AddItemActivity : BaseActivity() {
     protected lateinit var add_manually_btn: MaterialButton
