@@ -140,15 +140,8 @@ class ItemFragment : Fragment() {
                 lifecycleScope.launch {
                     PantryApp.database.prodottoDao().additem(prodotto)
                     Toast.makeText(requireContext(), "Prodotto aggiunto", Toast.LENGTH_SHORT).show()
-
-                    // TODO: aggiungere il cambio view alla view "Vista di tutti i prodotti"
-                    
-                    //Vista su log degli item aggiunti (momentaneo)
-                    val prodottiSalvati = PantryApp.database.prodottoDao().getAllItems()
-                    for (p in prodottiSalvati) {
-                        Log.d("DATABASE", "Nome prodotto: ${p.productName} - Scadenza: ${p.expiringDate} - Contenitore: ${p.container} - Quantità: ${p.quantity} - Barcode: ${p.barcode}")
-                    }
                 }
+                activity?.finish()
             }
         }
     }
