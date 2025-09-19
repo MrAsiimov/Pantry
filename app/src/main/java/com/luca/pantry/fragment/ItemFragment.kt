@@ -110,13 +110,18 @@ class ItemFragment : Fragment() {
         }
     }
     private fun setupContainerDropdown() {
-        val options = listOf("Frigorifero", "Dispensa", "Freezer")
-        val adapter = ArrayAdapter(
-            requireContext(),
-            R.layout.dropdown_menu_popup_item,
-            options
-        )
-        textContainerEdit.setAdapter(adapter)
+        lifecycleScope.launch {
+            val c = PantryApp.database.containerDao().getAllContainers()
+            val options = c.map { it.nameContainer }
+
+
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_menu_popup_item,
+                options
+            )
+            textContainerEdit.setAdapter(adapter)
+        }
     }
 
     private fun setupSaveButton() {

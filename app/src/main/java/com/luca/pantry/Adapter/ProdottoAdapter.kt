@@ -1,4 +1,4 @@
-package com.luca.pantry
+package com.luca.pantry.Adapter
 
 import android.view.LayoutInflater
 import android.view.View

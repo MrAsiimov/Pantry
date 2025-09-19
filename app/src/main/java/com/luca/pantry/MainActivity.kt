@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.luca.pantry.Adapter.ProdottoAdapter
 import com.luca.pantry.Add.AddContainerActivity
 import com.luca.pantry.Add.AddItemActivity
 import kotlinx.coroutines.launch
@@ -18,8 +18,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private var adapter = ProdottoAdapter(emptyList())
 class MainActivity : BaseActivity() {
+    private var adapter = ProdottoAdapter(emptyList())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
