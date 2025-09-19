@@ -7,9 +7,18 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Add.AddContainerActivity
 import com.luca.pantry.Add.AddItemActivity
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
+private var adapter = ProdottoAdapter(emptyList())
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +34,21 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         setTextHeader("Home")
 
+        val recyclerView = findViewById<RecyclerView>(R.id.home_expiring_items)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+        setupRecyclerView()
+
         popupMenuCreate()
 
     }
 
+
+
     override fun onResume() {
         super.onResume()
 
-
+        setupRecyclerView()
     }
 
     //Create a pop-up menu for the add button (Add item/ add container)
@@ -71,6 +87,28 @@ class MainActivity : BaseActivity() {
                 }
             }
             popupMenu.show()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val dao = PantryApp.database.prodottoDao()
+
+        lifecycleScope.launch {
+            val products = dao.getAllItems()
+            val today = Date()
+            val limit = Calendar.getInstance().apply {
+                time = today
+                add(Calendar.DAY_OF_YEAR, 15)
+            }.time
+
+            val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+
+            val expiring_items = products.filter {
+                val expire_date = formatter.parse(it.expiringDate)
+                expire_date != null && expire_date.before(limit)
+            }
+
+            adapter.updateData(expiring_items)
         }
     }
 }

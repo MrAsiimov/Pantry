@@ -150,7 +150,6 @@ class ItemFragment : Fragment() {
                     }
                 }
             }
-
         }
     }
 
@@ -195,6 +194,7 @@ class ItemFragment : Fragment() {
             maxValue = 100
             value = 0
 
+            //Set numberPicker to hide upper and lower value
             setFormatter { displayedValues ->
                 if (displayedValues == value) displayedValues.toString()
                 else ""
