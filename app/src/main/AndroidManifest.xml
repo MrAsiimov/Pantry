@@ -23,7 +23,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
-            android:name=".Add.AddContainerActivity"
+            android:name=".View.ContainerViewActivity"
             android:exported="false"
             android:label="@string/title_activity_add_container"
             android:screenOrientation="portrait"

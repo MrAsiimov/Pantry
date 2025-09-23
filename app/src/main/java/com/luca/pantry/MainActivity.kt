@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Adapter.ProdottoAdapter
-import com.luca.pantry.Add.AddContainerActivity
 import com.luca.pantry.Add.AddItemActivity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -85,7 +84,10 @@ class MainActivity : BaseActivity() {
                         true
                     }
                     R.id.add_container -> {
-                        val intent = Intent(this, AddContainerActivity::class.java)
+                        val addcontainer = "addcontainer"
+                        val intent = Intent(this, EmptyActivity::class.java).apply {
+                            putExtra("ORIGIN", addcontainer)
+                        }
                         startActivity(intent)
                         true
                     }

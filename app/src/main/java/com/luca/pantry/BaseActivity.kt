@@ -16,6 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.luca.pantry.R.id.menu_button
+import com.luca.pantry.View.ContainerViewActivity
 
 abstract class BaseActivity: AppCompatActivity() {
     protected lateinit var navView: NavigationView
@@ -43,8 +44,7 @@ abstract class BaseActivity: AppCompatActivity() {
                     Intent(this, MainActivity::class.java)
                 }
                 R.id.menu_container -> {
-                    Toast.makeText(this, "Container premuto", Toast.LENGTH_SHORT).show()
-                    null
+                    Intent(this, ContainerViewActivity::class.java)
                 }
                 R.id.menu_items -> {
                     Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
