@@ -2,6 +2,7 @@ package com.luca.pantry
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import com.luca.pantry.fragment.ContainerFragment
 import com.luca.pantry.fragment.ItemFragment
 
 class EmptyActivity : BaseActivity() {
@@ -24,13 +25,22 @@ class EmptyActivity : BaseActivity() {
 
         when (origin) {
             "addmanually" -> {
-                setTextHeader("Aggiungi prodotto")
+                setTextHeader("Nuovo Prodotto")
 
                 val itemFragment = ItemFragment()
                 itemFragment.arguments = bundleOf("showBarcode" to true)
 
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, itemFragment)
+                    .commit()
+            }
+            "addcontainer" -> {
+                setTextHeader("Nuovo Contenitore")
+
+                val containerFragment = ContainerFragment()
+
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, ContainerFragment())
                     .commit()
             }
         }

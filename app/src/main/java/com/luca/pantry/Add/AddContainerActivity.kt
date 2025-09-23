@@ -1,6 +1,10 @@
 package com.luca.pantry.Add
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.luca.pantry.Adapter.ContainerAdapter
 import com.luca.pantry.ui.theme.PantryTheme
 import com.luca.pantry.BaseActivity
+import com.luca.pantry.EmptyActivity
 import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.EntityDB.Prodotto
 import com.luca.pantry.PantryApp
@@ -28,6 +33,8 @@ import kotlinx.coroutines.launch
 
 class AddContainerActivity : BaseActivity() {
     private val adapter = ContainerAdapter(emptyList())
+
+    private lateinit var add_container_btn: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,37 +48,54 @@ class AddContainerActivity : BaseActivity() {
         recyclerView.adapter = adapter
         setupRecyclerView()
 
+        buttonAnimationConfig()
         setupAddcontainerButton()
     }
 
     override fun onResume() {
         super.onResume()
 
+        setupRecyclerView()
     }
 
     private fun setupAddcontainerButton() {
-        val add_container_button = findViewById<FloatingActionButton>(R.id.add_button_container)
-        val a = "banana"
-        var i = 0
+        add_container_btn = findViewById(R.id.add_button_container)
+        var addcontainer = "addcontainer"
 
-        add_container_button.setOnClickListener {
-            val nome = a + i.toString()
-            val containerName = Container(
-                nome
-            )
-            i++
-
-            lifecycleScope.launch {
-                PantryApp.database.containerDao().addContainer(containerName)
+        add_container_btn.setOnClickListener {
+            val intent = Intent(this, EmptyActivity::class.java).apply {
+                putExtra("ORIGIN", addcontainer)
             }
-            Toast.makeText(this, "Contenitore add premuto", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
         }
     }
-
     private fun setupRecyclerView() {
         lifecycleScope.launch {
             val containers = PantryApp.database.containerDao().getAllContainers()
             adapter.updateData(containers)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun buttonAnimationConfig() {
+        add_container_btn = findViewById(R.id.add_button_container)
+
+        add_container_btn.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
         }
     }
 }

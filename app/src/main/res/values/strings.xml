@@ -21,6 +21,7 @@
     <string name="text_header_settings">Impostazioni</string>
     <string name="text_header_add_item_activity">Aggiungi prodotto</string>
     <string name="text_header_add_container_activity">Aggiungi contenitore</string>
+    <string name="text_header_new_item">Nuovo Prodotto</string>
 
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_basic">BasicActivity</string>

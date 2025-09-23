@@ -20,6 +20,7 @@
             android:name=".EmptyActivity"
             android:exported="false"
             android:label="@string/title_activity_empty"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pantry" />
         <activity
             android:name=".Add.AddContainerActivity"

@@ -2,7 +2,6 @@ package com.luca.pantry.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -35,7 +34,7 @@ class ItemFragment : Fragment() {
     private lateinit var textContainerEdit: AutoCompleteTextView
     private lateinit var btnSave: MaterialButton
     private lateinit var npQuantity: NumberPicker
-    private lateinit var textItemName: TextInputLayout
+    private lateinit var textItemNameEdit: TextInputEditText
     private lateinit var textBarcodeEdit: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +50,6 @@ class ItemFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_item, container, false)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         textDate = view.findViewById(R.id.text_date)
@@ -60,7 +58,7 @@ class ItemFragment : Fragment() {
         textContainerEdit = view.findViewById(R.id.text_container_edit)
         btnSave = view.findViewById(R.id.btn_save)
         npQuantity = view.findViewById(R.id.np_quantity)
-        textItemName = view.findViewById(R.id.text_item_name)
+        textItemNameEdit = view.findViewById(R.id.text_item_name_edit)
         textBarcodeEdit = view.findViewById(R.id.text_barcode_edit)
 
         val barcodeText = view.findViewById<TextInputLayout>(R.id.text_barcode)
@@ -127,7 +125,7 @@ class ItemFragment : Fragment() {
     private fun setupSaveButton() {
         btnSave.setOnClickListener {
             val quantity = npQuantity.value.toString().toIntOrNull() ?: 0
-            val itemName = textItemName.editText?.text.toString()
+            val itemName = textItemNameEdit.text.toString()
             val date = textDateEdit.text.toString()
             val container = textContainerEdit.text.toString()
             val barcode = textBarcodeEdit.text.toString()

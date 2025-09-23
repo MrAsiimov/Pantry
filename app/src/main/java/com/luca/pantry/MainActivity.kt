@@ -1,8 +1,11 @@
 package com.luca.pantry
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
@@ -20,6 +23,7 @@ import java.util.Locale
 
 class MainActivity : BaseActivity() {
     private var adapter = ProdottoAdapter(emptyList())
+    private lateinit var add_button: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +44,7 @@ class MainActivity : BaseActivity() {
         recyclerView.adapter = adapter
         setupRecyclerView()
 
+        buttonAnimationConfig()
         popupMenuCreate()
 
     }
@@ -54,7 +59,7 @@ class MainActivity : BaseActivity() {
 
     //Create a pop-up menu for the add button (Add item/ add container)
     private fun popupMenuCreate(){
-        val add_button = findViewById<ImageButton>(R.id.add_button_home)
+        add_button = findViewById(R.id.add_button_home)
         add_button.setOnClickListener {
             val popupMenu = PopupMenu(this, add_button)
 
@@ -110,6 +115,29 @@ class MainActivity : BaseActivity() {
             }
 
             adapter.updateData(expiring_items)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun buttonAnimationConfig() {
+        add_button = findViewById(R.id.add_button_home)
+
+        add_button.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
+                    v.startAnimation(down)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    val up = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_release)
+                    v.startAnimation(up)
+                }
+            }
+            false
         }
     }
 }

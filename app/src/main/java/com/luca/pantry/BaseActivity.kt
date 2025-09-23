@@ -124,6 +124,7 @@ abstract class BaseActivity: AppCompatActivity() {
             "Impostazioni" -> text_header.setText(R.string.text_header_settings)
             "Aggiungi prodotto" -> text_header.setText(R.string.text_header_add_item_activity)
             "Aggiungi contenitore" -> text_header.setText(R.string.text_header_add_container_activity)
+            "Nuovo Prodotto" -> text_header.setText(R.string.text_header_new_item)
         }
     }
 }
