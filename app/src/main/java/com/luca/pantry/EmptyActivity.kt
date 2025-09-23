@@ -3,6 +3,7 @@ package com.luca.pantry
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.luca.pantry.fragment.ContainerFragment
+import com.luca.pantry.fragment.ContainerViewFragment
 import com.luca.pantry.fragment.ItemFragment
 
 class EmptyActivity : BaseActivity() {
@@ -37,10 +38,15 @@ class EmptyActivity : BaseActivity() {
             "addcontainer" -> {
                 setTextHeader("Nuovo Contenitore")
 
-                val containerFragment = ContainerFragment()
-
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, ContainerFragment())
+                    .commit()
+            }
+            "containerview" -> {
+                setTextHeader("I Tuoi Container")
+
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, ContainerViewFragment())
                     .commit()
             }
         }

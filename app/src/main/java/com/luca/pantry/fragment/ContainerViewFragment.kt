@@ -1,71 +1,77 @@
-package com.luca.pantry.View
+package com.luca.pantry.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.luca.pantry.Adapter.ContainerAdapter
-import com.luca.pantry.BaseActivity
 import com.luca.pantry.EmptyActivity
 import com.luca.pantry.PantryApp
 import com.luca.pantry.R
 import kotlinx.coroutines.launch
 
-class ContainerViewActivity : BaseActivity() {
+
+class ContainerViewFragment : Fragment() {
+
     private val adapter = ContainerAdapter(emptyList())
+    private lateinit var addContainerButton: FloatingActionButton
+    private lateinit var recyclerView: RecyclerView
 
-    private lateinit var add_container_btn: FloatingActionButton
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_view_container, container, false)
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        setContentView(R.layout.activity_addcontainer)
-
-        setTextHeader("Aggiungi contenitore")
-
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_container)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView = view.findViewById(R.id.recycler_container)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = adapter
-        setupRecyclerView()
 
+        addContainerButton = view.findViewById(R.id.add_button_container)
+
+        setupRecyclerView()
+        setupAddContainerButton()
         buttonAnimationConfig()
-        setupAddcontainerButton()
     }
 
     override fun onResume() {
         super.onResume()
-
         setupRecyclerView()
     }
 
-    private fun setupAddcontainerButton() {
-        add_container_btn = findViewById(R.id.add_button_container)
-        var addcontainer = "addcontainer"
-
-        add_container_btn.setOnClickListener {
-            val intent = Intent(this, EmptyActivity::class.java).apply {
+    private fun setupAddContainerButton() {
+        val addcontainer = "addcontainer"
+        addContainerButton.setOnClickListener {
+            val intent = Intent(requireContext(), EmptyActivity::class.java).apply {
                 putExtra("ORIGIN", addcontainer)
             }
             startActivity(intent)
         }
     }
+
     private fun setupRecyclerView() {
         lifecycleScope.launch {
-            val containers = PantryApp.Companion.database.containerDao().getAllContainers()
+            val containers = PantryApp.database.containerDao().getAllContainers()
             adapter.updateData(containers)
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun buttonAnimationConfig() {
-        add_container_btn = findViewById(R.id.add_button_container)
-
-        add_container_btn.setOnTouchListener { v, event ->
+        addContainerButton.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     val down = AnimationUtils.loadAnimation(v.context, R.anim.button_scale_on_press)
