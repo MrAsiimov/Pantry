@@ -3,6 +3,7 @@ package com.luca.pantry.Add
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import com.google.android.material.button.MaterialButton
 import com.luca.pantry.BaseActivity
@@ -10,7 +11,8 @@ import com.luca.pantry.EmptyActivity
 import com.luca.pantry.R
 import com.luca.pantry.fragment.CameraFragment
 
-class AddItemActivity : BaseActivity() {
+class AddItemActivity : BaseActivity(), CameraFragment.BarcodeCallback {
+
     protected lateinit var add_manually_btn: MaterialButton
     protected lateinit var cancel_btn: MaterialButton
 
@@ -97,5 +99,13 @@ class AddItemActivity : BaseActivity() {
             startActivity(intent)
         }
     }
-}
 
+    override fun onBarcodeScanned(code: String) {
+        val intent = Intent(this, EmptyActivity::class.java).apply {
+            putExtra("CAMERA", code)
+        }
+        startActivity(intent)
+
+        Log.d("BarcodeScanner", "Scanned barcode: $code")
+    }
+}

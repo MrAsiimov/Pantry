@@ -35,6 +35,7 @@ class ItemFragment : Fragment() {
     private lateinit var btnSave: MaterialButton
     private lateinit var npQuantity: NumberPicker
     private lateinit var textItemNameEdit: TextInputEditText
+    private lateinit var barcodeText: TextInputLayout
     private lateinit var textBarcodeEdit: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,17 +60,11 @@ class ItemFragment : Fragment() {
         btnSave = view.findViewById(R.id.btn_save)
         npQuantity = view.findViewById(R.id.np_quantity)
         textItemNameEdit = view.findViewById(R.id.text_item_name_edit)
+        barcodeText = view.findViewById(R.id.text_barcode)
         textBarcodeEdit = view.findViewById(R.id.text_barcode_edit)
 
-        val barcodeText = view.findViewById<TextInputLayout>(R.id.text_barcode)
 
-        val showBarcode = arguments?.getBoolean("showBarcode") ?: false
-        if (showBarcode) {
-            barcodeText.visibility = View.VISIBLE
-        } else {
-            barcodeText.visibility = View.GONE
-        }
-
+        setBarcodeField()
         setNumberPicker()
         setupDatePicker()
         setupContainerDropdown()
@@ -195,6 +190,20 @@ class ItemFragment : Fragment() {
                 if (displayedValues == value) displayedValues.toString()
                 else ""
             }
+        }
+    }
+
+    private fun setBarcodeField() {
+        val showBarcode = arguments?.getBoolean("showBarcode") ?: false
+        if (showBarcode) {
+            barcodeText.visibility = View.VISIBLE
+        } else {
+            barcodeText.visibility = View.GONE
+        }
+
+        val barcode = arguments?.getString("barcode")
+        if (barcode != null) {
+            textBarcodeEdit.setText(barcode)
         }
     }
 

@@ -50,5 +50,16 @@ class EmptyActivity : BaseActivity() {
                     .commit()
             }
         }
+
+        var barcode = intent.getStringExtra("CAMERA")
+
+        if (barcode != null) {
+            val itemFragment = ItemFragment()
+            itemFragment.arguments = bundleOf("showBarcode" to true, "barcode" to barcode)
+
+            supportFragmentManager.beginTransaction()
+                .replace(fragment, itemFragment)
+                .commit()
+        }
     }
 }

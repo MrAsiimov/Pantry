@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation ("androidx.room:room-runtime:2.8.0")
     kapt ("androidx.room:room-compiler:2.8.0")
+    implementation(libs.barcode.scanning)
     implementation(libs.androidx.camera.core)
     implementation (libs.androidx.camera.camera2)
     implementation (libs.androidx.camera.lifecycle)
