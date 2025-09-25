@@ -43,6 +43,9 @@ android {
 dependencies {
     implementation ("androidx.room:room-runtime:2.8.0")
     kapt ("androidx.room:room-compiler:2.8.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.barcode.scanning)
     implementation(libs.androidx.camera.core)
     implementation (libs.androidx.camera.camera2)

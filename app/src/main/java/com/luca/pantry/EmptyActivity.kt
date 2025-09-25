@@ -29,7 +29,7 @@ class EmptyActivity : BaseActivity() {
                 setTextHeader("Nuovo Prodotto")
 
                 val itemFragment = ItemFragment()
-                itemFragment.arguments = bundleOf("showBarcode" to true)
+                itemFragment.arguments = bundleOf("SHOWBARCODE" to true)
 
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, itemFragment)
@@ -49,17 +49,30 @@ class EmptyActivity : BaseActivity() {
                     .replace(fragment, ContainerViewFragment())
                     .commit()
             }
-        }
+            "addcamera" -> {
+                setTextHeader("Nuovo Prodotto")
+                val barcode = intent.getStringExtra("BARCODE")
+                val name = intent.getStringExtra("NAME")
+                val imageurl = intent.getStringExtra("IMAGEURL")
 
-        var barcode = intent.getStringExtra("CAMERA")
+                var bundle = if (name != null && imageurl != null) {
+                        bundleOf(
+                        "SHOWBARCODE" to true,
+                        "BARCODE" to barcode,
+                        "NAME" to name,
+                        "IMAGEURL" to imageurl
+                    )
+                } else {
+                    bundleOf("SHOWBARCODE" to true, "BARCODE" to barcode)
+                }
 
-        if (barcode != null) {
-            val itemFragment = ItemFragment()
-            itemFragment.arguments = bundleOf("showBarcode" to true, "barcode" to barcode)
+                val itemFragment = ItemFragment()
+                itemFragment.arguments = bundle
 
-            supportFragmentManager.beginTransaction()
-                .replace(fragment, itemFragment)
-                .commit()
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, itemFragment)
+                    .commit()
+            }
         }
     }
 }

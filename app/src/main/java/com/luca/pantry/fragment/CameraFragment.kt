@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,6 +22,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import com.luca.pantry.R
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -37,7 +40,11 @@ class CameraFragment : Fragment() {
     }
 
     private lateinit var previewView: PreviewView
+
+    private lateinit var scanner: BarcodeScanner
     private var callback: BarcodeCallback? = null
+
+    private var hasHandlerBarcode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +84,14 @@ class CameraFragment : Fragment() {
     }
 
     private fun handleBarcode(rawValue: String) {
+        if (hasHandlerBarcode) return
+
+        hasHandlerBarcode = true
         callback?.onBarcodeScanned(rawValue)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            hasHandlerBarcode = false
+        }, 4000)
     }
 
     @OptIn(ExperimentalGetImage::class)
@@ -103,7 +117,7 @@ class CameraFragment : Fragment() {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
-            val scanner = BarcodeScanning.getClient(options)
+            scanner = BarcodeScanning.getClient(options)
 
             var lastLongTime = 0L
             var lastScannedCode: String? = null
@@ -122,6 +136,10 @@ class CameraFragment : Fragment() {
                                     if (rawValue != null && rawValue != lastScannedCode) {
                                         lastScannedCode = rawValue
                                         handleBarcode(rawValue) //passa il codice a barre al fragment
+
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            lastScannedCode = null
+                                        }, 4000)
                                     }
 
                                     //Toast.makeText(safeContext, rawValue, Toast.LENGTH_SHORT).show()

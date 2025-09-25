@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -37,6 +39,7 @@ class ItemFragment : Fragment() {
     private lateinit var textItemNameEdit: TextInputEditText
     private lateinit var barcodeText: TextInputLayout
     private lateinit var textBarcodeEdit: TextInputEditText
+    private lateinit var imageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +65,11 @@ class ItemFragment : Fragment() {
         textItemNameEdit = view.findViewById(R.id.text_item_name_edit)
         barcodeText = view.findViewById(R.id.text_barcode)
         textBarcodeEdit = view.findViewById(R.id.text_barcode_edit)
+        imageView = view.findViewById(R.id.image_view)
 
 
-        setBarcodeField()
+
+        setFields()
         setNumberPicker()
         setupDatePicker()
         setupContainerDropdown()
@@ -193,15 +198,29 @@ class ItemFragment : Fragment() {
         }
     }
 
-    private fun setBarcodeField() {
-        val showBarcode = arguments?.getBoolean("showBarcode") ?: false
+    private fun setFields() {
+        val showBarcode = arguments?.getBoolean("SHOWBARCODE") ?: false
+        val barcode = arguments?.getString("BARCODE")
+        val name = arguments?.getString("NAME")
+        val imageurl = arguments?.getString("IMAGEURL")
+
+        if (name != null && imageurl != null) {
+            textItemNameEdit.setText(name)
+
+            if (imageurl.isNotEmpty()) {
+                Glide.with(requireContext())
+                    .load(imageurl)
+                    .into(imageView)
+            }
+        }
+
+
         if (showBarcode) {
             barcodeText.visibility = View.VISIBLE
         } else {
             barcodeText.visibility = View.GONE
         }
 
-        val barcode = arguments?.getString("barcode")
         if (barcode != null) {
             textBarcodeEdit.setText(barcode)
         }
