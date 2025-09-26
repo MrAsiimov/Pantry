@@ -2,17 +2,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:layout_gravity="center"
     android:elevation="4dp"
     android:padding="16dp"
     android:backgroundTint="#F5F5F5">
 
-    <TextView
-        android:id="@+id/text_container_nome"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Container 1"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#333333" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/image_container_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/image_border"
+            android:src="@drawable/ic_container" />
+
+        <TextView
+            android:id="@+id/text_container_nome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:gravity="center" />
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

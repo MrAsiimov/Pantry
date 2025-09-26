@@ -1,6 +1,7 @@
 package com.luca.pantry.fragment
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.core.net.toUri
 
 class ItemFragment : Fragment() {
     private lateinit var textDate: TextInputLayout
@@ -129,16 +131,32 @@ class ItemFragment : Fragment() {
             val date = textDateEdit.text.toString()
             val container = textContainerEdit.text.toString()
             val barcode = textBarcodeEdit.text.toString()
+            val imageurl = arguments?.getString("IMAGEURL")
+            val prodotto: Prodotto
 
             if (quantity == 0 || itemName.isEmpty() || date.isEmpty() || container.isEmpty() || barcode.isEmpty()) {
                 Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
             } else {
-                val prodotto = Prodotto(
-                    itemName,
-                    date,
-                    container,
-                    quantity,
-                    barcode)
+                if (imageurl == null) {
+                    val drawableId = R.drawable.ic_notfound
+                    val uri = "android.resource://${context?.packageName}/$drawableId".toUri().toString()
+
+                    prodotto = Prodotto(
+                        itemName,
+                        date,
+                        container,
+                        quantity,
+                        barcode,
+                        uri)
+                } else {
+                    prodotto = Prodotto(
+                        itemName,
+                        date,
+                        container,
+                        quantity,
+                        barcode,
+                        imageurl)
+                }
 
                 lifecycleScope.launch {
                     PantryApp.database.prodottoDao().additem(prodotto)
@@ -212,6 +230,12 @@ class ItemFragment : Fragment() {
                     .load(imageurl)
                     .into(imageView)
             }
+        } else {
+            val drawableId = R.drawable.ic_notfound
+            val uri = "android.resource://${context?.packageName}/$drawableId".toUri()
+            Glide.with(requireContext())
+                .load(uri)
+                .into(imageView)
         }
 
 

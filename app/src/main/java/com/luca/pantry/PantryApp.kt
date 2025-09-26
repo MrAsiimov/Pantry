@@ -18,7 +18,9 @@ class PantryApp: Application() {
             applicationContext,
             DatabaseApp::class.java,
             "pantry_database"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     val containerDao: ContainerDao

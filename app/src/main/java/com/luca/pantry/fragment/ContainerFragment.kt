@@ -20,6 +20,14 @@ class ContainerFragment : Fragment() {
     private lateinit var textContainerNameEdit: TextInputEditText
     private lateinit var cancel_button: MaterialButton
     private lateinit var save_button: MaterialButton
+    private var selectedImageName: String? = null
+
+    private val imageOptions = listOf(
+        R.drawable.ic_fridge,
+        R.drawable.ic_freezer,
+        R.drawable.ic_pantry,
+        R.drawable.ic_container
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,25 +51,34 @@ class ContainerFragment : Fragment() {
         save_button = view.findViewById(R.id.btn_save_container)
 
         setupCancelButton()
+        setupImageView()
         setupSaveButton()
+    }
+
+    private fun setupImageView() {
+        imageViewContainer.setOnClickListener {
+            val dialog = ImagePickerDialogFragment(imageOptions) { selectedDrawableId ->
+                imageViewContainer.setImageResource(selectedDrawableId)
+                selectedImageName = resources.getResourceEntryName(selectedDrawableId)
+            }
+            dialog.show(childFragmentManager, "ImagePicker")
+        }
     }
 
     private fun setupSaveButton() {
         save_button.setOnClickListener {
             var container_name = textContainerNameEdit.text.toString()
 
-            if (container_name.isEmpty()){
-                Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
-            } else {
-                val container = Container(
-                    container_name
-                )
+            if (container_name.isNotEmpty() && selectedImageName != null) {
+                val container = Container( nameContainer = container_name, imageuri = selectedImageName!!)
 
                 lifecycleScope.launch {
                     PantryApp.database.containerDao().addContainer(container)
                     Toast.makeText(requireContext(), "Contitore aggiunto", Toast.LENGTH_SHORT).show()
                 }
                 activity?.finish()
+            } else {
+                Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -41,7 +41,6 @@ class CameraFragment : Fragment() {
 
     private lateinit var previewView: PreviewView
 
-    private lateinit var scanner: BarcodeScanner
     private var callback: BarcodeCallback? = null
 
     private var hasHandlerBarcode = false
@@ -117,7 +116,7 @@ class CameraFragment : Fragment() {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
-            scanner = BarcodeScanning.getClient(options)
+            val scanner = BarcodeScanning.getClient(options)
 
             var lastLongTime = 0L
             var lastScannedCode: String? = null

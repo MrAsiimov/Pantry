@@ -27,7 +27,6 @@
             android:clickable="true"
             android:focusable="true"/>
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_container_add_name"
             android:layout_width="0dp"

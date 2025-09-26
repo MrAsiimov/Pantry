@@ -8,5 +8,6 @@ data class Prodotto(
     val expiringDate: String,
     val container: String,
     val quantity: Int,
-    val barcode: String
+    val barcode: String,
+    val imageUrl: String?
 )
