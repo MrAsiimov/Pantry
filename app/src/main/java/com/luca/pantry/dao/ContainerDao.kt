@@ -15,5 +15,15 @@ interface ContainerDao {
     suspend fun getAllContainers(): List<Container>
 
     @Delete
-    suspend fun deleteAll(containerS: List<Container>)
+    suspend fun deleteAll(containers: List<Container>)
+
+    @Query("DELETE FROM containers WHERE nameContainer = :nameContainer")
+    suspend fun deleteContainer(nameContainer: String)
+
+    @Query("UPDATE containers SET nameContainer = :newName WHERE nameContainer = :oldName")
+    suspend fun updateNameContainer(oldName: String, newName: String)
+
+    @Query("UPDATE containers SET imageuri = :imageName WHERE nameContainer = :nameContainer")
+    suspend fun updateImageContainer(nameContainer: String, imageName: String)
+
 }

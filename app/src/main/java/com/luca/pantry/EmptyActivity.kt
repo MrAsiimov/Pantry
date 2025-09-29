@@ -15,9 +15,25 @@ import com.luca.pantry.fragment.ItemViewFragment
 
 class EmptyActivity : BaseActivity() {
     private lateinit var origin: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_empty)
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.empty_fragment)
+
+            when (currentFragment) {
+                is ContainerViewFragment -> setTextHeader("I Tuoi Container")
+                is ItemViewFragment -> {
+                    val name = currentFragment.arguments?.getString("CONTAINER") ?: "Prodotti"
+                    setTextHeader(name)
+                }
+                is ExpiringItemsFragment -> setTextHeader("Prodotti in scadenza")
+                is ContainerFragment -> setTextHeader("Nuovo Contenitore")
+                is ItemFragment -> setTextHeader("Nuovo Prodotto")
+            }
+        }
 
         loadFrameLayout()
     }

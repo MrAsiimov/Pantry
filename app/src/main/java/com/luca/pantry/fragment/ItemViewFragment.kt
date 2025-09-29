@@ -43,11 +43,21 @@ class ItemViewFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val dao = PantryApp.database.prodottoDao()
+        val container = arguments?.getString("CONTAINER")
 
-        lifecycleScope.launch {
-            val prodotti = dao.getAllItems()
+        if (container == null) {
+            lifecycleScope.launch {
+                val prodotti = dao.getAllItems()
 
-            adapter.updateData(prodotti)
+                adapter.updateData(prodotti)
+            }
+        } else {
+            lifecycleScope.launch {
+                val prodotti = dao.getItemsByContainer(container)
+
+                adapter.updateData(prodotti)
+            }
         }
+
     }
 }

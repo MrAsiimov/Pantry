@@ -147,6 +147,7 @@ abstract class BaseActivity: AppCompatActivity() {
             "Nuovo Prodotto" -> text_header.setText(R.string.text_header_new_item)
             "Nuovo Contenitore" -> text_header.setText(R.string.text_header_new_container)
             "I Tuoi Container" -> text_header.setText(R.string.text_header_container_view)
+            else -> text_header.text = text
         }
     }
 }

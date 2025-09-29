@@ -17,5 +17,9 @@ interface ProdottoDao {
     @Query("SELECT * FROM prodotti ORDER BY expiringDate ASC")
     suspend fun getExpiringItems(): List<Prodotto>
 
+    @Query("DELETE FROM prodotti WHERE container = :container")
+    suspend fun deleteItemsByContainer(container: String)
 
+    @Query("SELECT * FROM prodotti WHERE container = :container")
+    suspend fun getItemsByContainer(container: String): List<Prodotto>)
 }
