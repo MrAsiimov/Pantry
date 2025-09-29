@@ -1,10 +1,17 @@
 package com.luca.pantry
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import com.luca.pantry.fragment.ContainerFragment
 import com.luca.pantry.fragment.ContainerViewFragment
+import com.luca.pantry.fragment.ExpiringItemsFragment
 import com.luca.pantry.fragment.ItemFragment
+import com.luca.pantry.fragment.ItemViewFragment
 
 class EmptyActivity : BaseActivity() {
     private lateinit var origin: String
@@ -18,6 +25,14 @@ class EmptyActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun loadFrameLayout() {
@@ -71,6 +86,20 @@ class EmptyActivity : BaseActivity() {
 
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, itemFragment)
+                    .commit()
+            }
+            "allitems" -> {
+                setTextHeader("Prodotti")
+
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, ItemViewFragment())
+                    .commit()
+            }
+            "expiringitems" -> {
+                setTextHeader("Prodotti in scadenza")
+
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, ExpiringItemsFragment())
                     .commit()
             }
         }

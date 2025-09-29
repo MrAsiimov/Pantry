@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.luca.pantry.R
 import com.luca.pantry.EntityDB.Prodotto
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapter<ProdottoAdapter.ProdottoViewHolder>() {
     class ProdottoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,9 +31,9 @@ class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: ProdottoViewHolder, position: Int) {
         val prodotto = prodotti[position]
+        val savedDate = prodotto.expiringDate
         holder.name.text = prodotto.productName
         holder.quantity.text = prodotto.quantity.toString()
-        holder.expiring_date.text = prodotto.expiringDate
         holder.container.text = prodotto.container
 
         if (!prodotto.imageUrl.isNullOrEmpty()){
@@ -45,6 +47,18 @@ class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapte
                 .load(uri)
                 .into(holder.imageView)
         }
+
+        val displayDate = try {
+            val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+            val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+            val parsedDate = isoFormat.parse(savedDate)
+            displayFormat.format(parsedDate)
+        } catch (e: Exception) {
+            savedDate
+        }
+
+        holder.expiring_date.text = displayDate
+
     }
 
     override fun getItemCount(): Int = prodotti.size

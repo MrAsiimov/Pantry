@@ -109,7 +109,7 @@ class MainActivity : BaseActivity() {
                 add(Calendar.DAY_OF_YEAR, 15)
             }.time
 
-            val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
 
             val expiring_items = products.filter {
                 val expire_date = formatter.parse(it.expiringDate)

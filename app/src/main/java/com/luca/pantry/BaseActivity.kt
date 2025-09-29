@@ -40,35 +40,52 @@ abstract class BaseActivity: AppCompatActivity() {
         navView.setNavigationItemSelectedListener { item ->
             val navIntent: Intent? = when (item.itemId) {
                 R.id.menu_home -> {
-                    Intent(this, MainActivity::class.java)
+                    Intent(this, MainActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
                 }
+
                 R.id.menu_container -> {
                     val containerview = "containerview"
                     Intent(this, EmptyActivity::class.java).apply {
                         putExtra("ORIGIN", containerview)
+                        addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                     }
                 }
+
                 R.id.menu_items -> {
-                    Toast.makeText(this, "Items premuto", Toast.LENGTH_SHORT).show()
-                    null
+                    val allitems = "allitems"
+                    Intent(this, EmptyActivity::class.java).apply {
+                        putExtra("ORIGIN", allitems)
+                        addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    }
                 }
+
                 R.id.menu_expiring_product -> {
-                    Toast.makeText(this, "Prodotti in scadenza premuto", Toast.LENGTH_SHORT).show()
-                    null
+                    val expiringitems = "expiringitems"
+                    Intent(this, EmptyActivity::class.java).apply {
+                        putExtra("ORIGIN", expiringitems)
+                        addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                    }
                 }
+
                 R.id.menu_settings -> {
                     Intent(this, SettingActivity::class.java)
                 }
+
                 else -> null
             }
 
             navIntent?.let { intentToLaunch ->
-                val targetClass: Class<*>? = intentToLaunch
-                    .component
-                    ?.className
-                    ?.let { name -> Class.forName(name) }
+                val targetClass = intentToLaunch.component?.className
+                val targetOrigin = intentToLaunch.getStringExtra("ORIGIN")
 
-                if (this::class.java != targetClass) {
+                val currentClass = this::class.java.name
+                val currentOrigin = intent?.getStringExtra("ORIGIN")
+
+                val isSameActivity = currentClass == targetClass && currentOrigin == targetOrigin
+
+                if (!isSameActivity) {
                     startActivity(intentToLaunch)
                 }
             }
@@ -76,6 +93,7 @@ abstract class BaseActivity: AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
 
         val menu_btn = findViewById<ImageButton>(menu_button)
         menu_btn.setOnClickListener {

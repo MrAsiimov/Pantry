@@ -16,8 +16,8 @@
 
     <string name="text_header_home">Home</string>
     <string name="text_header_container">Contenitori</string>
-    <string name="text_header_items">Prodotti</string>
-    <string name="text_header_expiring_products">Prodotti in scadenza</string>
+    <string name="text_header_items">I tuoi Prodotti</string>
+    <string name="text_header_expiring_products">Prodotti in Scadenza</string>
     <string name="text_header_settings">Impostazioni</string>
     <string name="text_header_add_item_activity">Aggiungi prodotto</string>
     <string name="text_header_add_container_activity">Aggiungi contenitore</string>
@@ -36,6 +36,4 @@
     <string name="settings_dark_mode">Modalità scura</string>
 
     <string name="permission_denied">Permesso negato</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

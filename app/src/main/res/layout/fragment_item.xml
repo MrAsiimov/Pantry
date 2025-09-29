@@ -91,7 +91,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/text_item_name_edit"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapSentences" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -175,7 +176,8 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/text_barcode_edit"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:inputType="number"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

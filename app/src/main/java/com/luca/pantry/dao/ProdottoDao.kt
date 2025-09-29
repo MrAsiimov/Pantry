@@ -14,7 +14,8 @@ interface ProdottoDao {
     @Query("SELECT * FROM prodotti WHERE quantity > 0")
     suspend fun getAllItems(): List<Prodotto>
 
-
+    @Query("SELECT * FROM prodotti ORDER BY expiringDate ASC")
+    suspend fun getExpiringItems(): List<Prodotto>
 
 
 }

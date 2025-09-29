@@ -42,6 +42,7 @@ class ItemFragment : Fragment() {
     private lateinit var barcodeText: TextInputLayout
     private lateinit var textBarcodeEdit: TextInputEditText
     private lateinit var imageView: ImageView
+    private lateinit var selectedDateIso: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,9 +105,17 @@ class ItemFragment : Fragment() {
 
         picker.show(parentFragmentManager, "DATE_PICKER")
         picker.addOnPositiveButtonClickListener { dateInMs ->
-            val formatted = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
-                .format(Date(dateInMs))
-            textDateEdit.setText(formatted)
+
+            val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+            val savedFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+
+            val selectedDate = Date(dateInMs)
+
+            val displayDate = displayFormat.format(selectedDate)
+            val savedDate = savedFormat.format(selectedDate)
+
+            textDateEdit.setText(displayDate)
+            selectedDateIso = savedDate
         }
     }
     private fun setupContainerDropdown() {
@@ -143,7 +152,7 @@ class ItemFragment : Fragment() {
 
                     prodotto = Prodotto(
                         itemName,
-                        date,
+                        selectedDateIso,
                         container,
                         quantity,
                         barcode,
@@ -151,7 +160,7 @@ class ItemFragment : Fragment() {
                 } else {
                     prodotto = Prodotto(
                         itemName,
-                        date,
+                        selectedDateIso,
                         container,
                         quantity,
                         barcode,
