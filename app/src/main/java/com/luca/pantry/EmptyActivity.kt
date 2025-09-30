@@ -104,6 +104,32 @@ class EmptyActivity : BaseActivity() {
                     .replace(fragment, itemFragment)
                     .commit()
             }
+            "modifyproduct" -> {
+                setTextHeader("Modifica Prodotto")
+
+                val name = intent.getStringExtra("NAMEPRODUCT")
+                val quantity = intent.getIntExtra("QUANTITYPRODUCT", 0)
+                val expiredate = intent.getStringExtra("EXPIREDATEPRODUCT")
+                val container = intent.getStringExtra("CONTAINERPRODUCT")
+                val barcode = intent.getStringExtra("BARCODEPRODUCT")
+                val imageurl = intent.getStringExtra("IMAGEPRODUCT")
+
+                val bundle = bundleOf(
+                    "NAMEPRODUCT" to name,
+                    "QUANTITYPRODUCT" to quantity,
+                    "EXPIREDATEPRODUCT" to expiredate,
+                    "CONTAINERPRODUCT" to container,
+                    "BARCODEPRODUCT" to barcode,
+                    "IMAGEPRODUCT" to imageurl,
+                    "MODIFYPRODUCT" to true
+                )
+                val itemFragment = ItemFragment()
+                itemFragment.arguments = bundle
+
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment, itemFragment)
+                    .commit()
+            }
             "allitems" -> {
                 setTextHeader("Prodotti")
 

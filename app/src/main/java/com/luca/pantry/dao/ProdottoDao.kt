@@ -8,6 +8,12 @@ interface ProdottoDao {
     @Insert
     suspend fun additem(prodotto: Prodotto)
 
+    @Update
+    suspend fun update(prodotto: Prodotto)
+
+    @Delete
+    suspend fun deleteProduct(prodotto: Prodotto)
+
     @Query("DELETE FROM prodotti WHERE barcode = :barcode")
     suspend fun deleteItem(barcode: String)
 
@@ -21,5 +27,5 @@ interface ProdottoDao {
     suspend fun deleteItemsByContainer(container: String)
 
     @Query("SELECT * FROM prodotti WHERE container = :container")
-    suspend fun getItemsByContainer(container: String): List<Prodotto>)
+    suspend fun getItemsByContainer(container: String): List<Prodotto>
 }

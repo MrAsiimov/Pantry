@@ -3,6 +3,7 @@ package com.luca.pantry.fragment
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -71,15 +72,19 @@ class ItemFragment : Fragment() {
         imageView = view.findViewById(R.id.image_view)
 
 
-
-        setFields()
+        buttonAnimationConfig()
         setNumberPicker()
+        setButtonsNP()
         setupDatePicker()
         setupContainerDropdown()
         setupSaveButton()
         setupCancelButton()
-        buttonAnimationConfig()
-        setButtonsNP()
+        setFields()
+
+        if (arguments?.getBoolean("MODIFYPRODUCT") == true) {
+            setFieldModify()
+        }
+
     }
 
     private fun setupDatePicker() {
@@ -134,21 +139,36 @@ class ItemFragment : Fragment() {
     }
 
     private fun setupSaveButton() {
+        val modify = arguments?.getBoolean("MODIFYPRODUCT") ?: false
+
         btnSave.setOnClickListener {
             val quantity = npQuantity.value.toString().toIntOrNull() ?: 0
             val itemName = textItemNameEdit.text.toString()
             val date = textDateEdit.text.toString()
             val container = textContainerEdit.text.toString()
             val barcode = textBarcodeEdit.text.toString()
-            val imageurl = arguments?.getString("IMAGEURL")
             val prodotto: Prodotto
+
+            var imageurl = if (!modify) {
+                arguments?.getString("IMAGEURL")
+            } else {
+                arguments?.getString("IMAGEPRODUCT")
+            }
 
             if (quantity == 0 || itemName.isEmpty() || date.isEmpty() || container.isEmpty() || barcode.isEmpty()) {
                 Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
             } else {
+                val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+                val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+
+                val parsedDate = displayFormat.parse(date)
+                selectedDateIso = parsedDate.let { isoFormat.format(it) }
+
                 if (imageurl == null) {
                     val drawableId = R.drawable.ic_notfound
                     val uri = "android.resource://${context?.packageName}/$drawableId".toUri().toString()
+
+
 
                     prodotto = Prodotto(
                         itemName,
@@ -167,12 +187,19 @@ class ItemFragment : Fragment() {
                         imageurl)
                 }
 
-                lifecycleScope.launch {
-                    PantryApp.database.prodottoDao().additem(prodotto)
-                    Toast.makeText(requireContext(), "Prodotto aggiunto", Toast.LENGTH_SHORT).show()
+                if (!modify){
+                    lifecycleScope.launch {
+                        PantryApp.database.prodottoDao().additem(prodotto)
+                        Toast.makeText(requireContext(), "Prodotto aggiunto", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    lifecycleScope.launch {
+                        PantryApp.database.prodottoDao().update(prodotto)
+                        Toast.makeText(requireContext(), "Prodotto aggiornato", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                activity?.finish()
             }
+            activity?.finish()
         }
     }
 
@@ -257,6 +284,33 @@ class ItemFragment : Fragment() {
         if (barcode != null) {
             textBarcodeEdit.setText(barcode)
         }
+    }
+
+    private fun setFieldModify() {
+        val name = arguments?.getString("NAMEPRODUCT")
+        val quantity = arguments?.getInt("QUANTITYPRODUCT")
+        val expiredate = arguments?.getString("EXPIREDATEPRODUCT")
+        val container = arguments?.getString("CONTAINERPRODUCT")
+        val barcode = arguments?.getString("BARCODEPRODUCT")
+        val imageurl = arguments?.getString("IMAGEPRODUCT")
+
+        Log.d("ItemFragment", "Image URL: $imageurl")
+
+        val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ITALY)
+        val isoFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+
+        val parsedDate = isoFormat.parse(expiredate!!)
+        val displayDate = parsedDate.let { displayFormat.format(it!!) }
+
+        textItemNameEdit.setText(name)
+        npQuantity.value = quantity ?: 100
+        textDateEdit.setText(displayDate)
+        textContainerEdit.setText(container)
+        textBarcodeEdit.setText(barcode)
+
+        Glide.with(requireContext())
+            .load(imageurl)
+            .into(imageView)
     }
 
     @SuppressLint("ClickableViewAccessibility")

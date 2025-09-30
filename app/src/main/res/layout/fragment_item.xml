@@ -20,7 +20,7 @@
                     android:layout_height="100dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="30dp"
-                    android:src="@drawable/ic_container"
+                    android:src="@drawable/ic_notfound"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -170,7 +170,7 @@
                     app:layout_constraintTop_toBottomOf="@id/text_container"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:layout_marginTop="16dp">
 
                         <com.google.android.material.textfield.TextInputEditText

@@ -5,16 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.R
 import com.luca.pantry.EntityDB.Prodotto
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapter<ProdottoAdapter.ProdottoViewHolder>() {
+class ProdottoAdapter(
+    private var prodotti: List<Prodotto>,
+    private val onRename: (Prodotto) -> Unit,
+    private val onChangeQuantity: (Prodotto) -> Unit,
+    private val onDelete: (Prodotto) -> Unit
+    ): RecyclerView.Adapter<ProdottoAdapter.ProdottoViewHolder>() {
     class ProdottoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name = itemView.findViewById<TextView>(R.id.text_nome)
         val quantity = itemView.findViewById<TextView>(R.id.text_quantita)
@@ -59,6 +66,11 @@ class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapte
 
         holder.expiring_date.text = displayDate
 
+        holder.itemView.setOnLongClickListener { view ->
+            showPopupMenu(view, prodotto)
+            true
+        }
+
     }
 
     override fun getItemCount(): Int = prodotti.size
@@ -66,5 +78,29 @@ class ProdottoAdapter(private var prodotti: List<Prodotto>): RecyclerView.Adapte
     fun updateData(newProdotti: List<Prodotto>) {
         prodotti = newProdotti
         notifyDataSetChanged()
+    }
+
+    private fun showPopupMenu(anchor: View, prodotto: Prodotto) {
+        val popupMenu = PopupMenu(anchor.context, anchor)
+        popupMenu.menuInflater.inflate(R.menu.popup_menu_item, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_rename_product -> {
+                    onRename(prodotto)
+                    true
+                }
+                R.id.action_changeQuantity -> {
+                    onChangeQuantity(prodotto)
+                    true
+                }
+                R.id.action_delete_product -> {
+                    onDelete(prodotto)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 }

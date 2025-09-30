@@ -1,11 +1,14 @@
 package com.luca.pantry
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.MotionEvent
 import android.view.animation.AnimationUtils
+import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
@@ -14,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Adapter.ProdottoAdapter
 import com.luca.pantry.Add.AddItemActivity
+import com.luca.pantry.EntityDB.Container
+import com.luca.pantry.EntityDB.Prodotto
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -21,7 +26,7 @@ import java.util.Date
 import java.util.Locale
 
 class MainActivity : BaseActivity() {
-    private var adapter = ProdottoAdapter(emptyList())
+    private lateinit var adapter: ProdottoAdapter
     private lateinit var add_button: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +45,23 @@ class MainActivity : BaseActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.home_expiring_items)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        adapter = ProdottoAdapter(
+            prodotti = emptyList(),
+            onRename = { prodotto -> val intent = Intent(this, EmptyActivity::class.java).apply {
+                putExtra("ORIGIN", "modifyproduct")
+                putExtra("NAMEPRODUCT", prodotto.productName)
+                putExtra("QUANTITYPRODUCT", prodotto.quantity)
+                putExtra("EXPIREDATEPRODUCT", prodotto.expiringDate)
+                putExtra("CONTAINERPRODUCT", prodotto.container)
+                putExtra("BARCODEPRODUCT", prodotto.barcode)
+                putExtra("IMAGEPRODUCT", prodotto.imageUrl)
+                }
+                startActivity(intent)
+            },
+            onChangeQuantity = { prodotto -> showQuantityDialog(prodotto) },
+            onDelete = { prodotto -> deleteProduct(prodotto) }
+        )
         recyclerView.adapter = adapter
         setupRecyclerView()
 
@@ -54,6 +76,43 @@ class MainActivity : BaseActivity() {
         super.onResume()
 
         setupRecyclerView()
+    }
+
+    private fun showQuantityDialog(prodotto: Prodotto) {
+        val input = EditText(this).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            setText(prodotto.quantity.toString())
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Modifica quantità")
+            .setView(input)
+            .setPositiveButton("Salva") { _, _ ->
+                val newQuantity = input.text.toString().toIntOrNull()
+                if (newQuantity != null) {
+                    lifecycleScope.launch {
+                        val updated = prodotto.copy(quantity = newQuantity)
+                        PantryApp.database.prodottoDao().update(updated)
+                        setupRecyclerView()
+                    }
+                }
+            }
+            .setNegativeButton("Annulla", null)
+            .show()
+    }
+
+    private fun deleteProduct(prodotto: Prodotto) {
+        AlertDialog.Builder(this)
+            .setTitle("Elimina prodotto")
+            .setMessage("Sei sicuro di voler eliminare ${prodotto.productName}?")
+            .setPositiveButton("Elimina") {_, _ ->
+                lifecycleScope.launch {
+                    PantryApp.database.prodottoDao().deleteProduct(prodotto)
+                    setupRecyclerView()
+                }
+            }
+            .setNegativeButton("Annulla", null)
+            .show()
     }
 
     //Create a pop-up menu for the add button (Add item/ add container)
