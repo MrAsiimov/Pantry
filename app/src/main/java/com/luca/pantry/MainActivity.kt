@@ -56,6 +56,7 @@ class MainActivity : BaseActivity() {
                 putExtra("CONTAINERPRODUCT", prodotto.container)
                 putExtra("BARCODEPRODUCT", prodotto.barcode)
                 putExtra("IMAGEPRODUCT", prodotto.imageUrl)
+                putExtra("FROM", "new")
                 }
                 startActivity(intent)
             },

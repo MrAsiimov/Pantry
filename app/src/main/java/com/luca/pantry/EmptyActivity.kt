@@ -31,7 +31,10 @@ class EmptyActivity : BaseActivity() {
                 }
                 is ExpiringItemsFragment -> setTextHeader("Prodotti in scadenza")
                 is ContainerFragment -> setTextHeader("Nuovo Contenitore")
-                is ItemFragment -> setTextHeader("Nuovo Prodotto")
+                is ItemFragment -> {
+                    val modify = currentFragment.arguments?.getBoolean("MODIFYPRODUCT") ?: false
+                    if (!modify) setTextHeader("Nuovo Prodotto") else setTextHeader("Modifica Prodotto")
+                }
             }
         }
 
@@ -113,6 +116,7 @@ class EmptyActivity : BaseActivity() {
                 val container = intent.getStringExtra("CONTAINERPRODUCT")
                 val barcode = intent.getStringExtra("BARCODEPRODUCT")
                 val imageurl = intent.getStringExtra("IMAGEPRODUCT")
+                val from = intent.getStringExtra("FROM")
 
                 val bundle = bundleOf(
                     "NAMEPRODUCT" to name,
@@ -121,13 +125,15 @@ class EmptyActivity : BaseActivity() {
                     "CONTAINERPRODUCT" to container,
                     "BARCODEPRODUCT" to barcode,
                     "IMAGEPRODUCT" to imageurl,
-                    "MODIFYPRODUCT" to true
+                    "MODIFYPRODUCT" to true,
+                    "FROM" to from
                 )
                 val itemFragment = ItemFragment()
                 itemFragment.arguments = bundle
 
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, itemFragment)
+                    .addToBackStack(null)
                     .commit()
             }
             "allitems" -> {

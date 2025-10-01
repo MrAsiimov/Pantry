@@ -45,16 +45,24 @@ class ExpiringItemsFragment : Fragment() {
         adapter = ProdottoAdapter(
             prodotti = emptyList(),
             onRename = { prodotto ->
-                val intent = Intent(requireContext(), EmptyActivity::class.java).apply {
-                    putExtra("ORIGIN", "modifyproduct")
-                    putExtra("NAMEPRODUCT", prodotto.productName)
-                    putExtra("QUANTITYPRODUCT", prodotto.quantity)
-                    putExtra("EXPIREDATEPRODUCT", prodotto.expiringDate)
-                    putExtra("CONTAINERPRODUCT", prodotto.container)
-                    putExtra("BARCODEPRODUCT", prodotto.barcode)
-                    putExtra("IMAGEPRODUCT", prodotto.imageUrl)
+                val itemFragment = ItemFragment().apply {
+                    arguments = Bundle().apply {
+                        putString("ORIGIN", "modifyproduct")
+                        putString("NAMEPRODUCT", prodotto.productName)
+                        putInt("QUANTITYPRODUCT", prodotto.quantity)
+                        putString("EXPIREDATEPRODUCT", prodotto.expiringDate)
+                        putString("CONTAINERPRODUCT", prodotto.container)
+                        putString("BARCODEPRODUCT", prodotto.barcode)
+                        putString("IMAGEPRODUCT", prodotto.imageUrl)
+                        putBoolean("MODIFYPRODUCT", true)
+                        putString("FROM", "modify")
+                    }
                 }
-                startActivity(intent)
+
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.empty_fragment, itemFragment)
+                    .addToBackStack(null)
+                    .commit()
             },
             onChangeQuantity = { prodotto ->
                 showQuantityDialog(prodotto)

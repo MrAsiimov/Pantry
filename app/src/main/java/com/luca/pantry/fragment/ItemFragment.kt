@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.core.net.toUri
+import com.luca.pantry.EmptyActivity
 
 class ItemFragment : Fragment() {
     private lateinit var textDate: TextInputLayout
@@ -83,6 +84,7 @@ class ItemFragment : Fragment() {
 
         if (arguments?.getBoolean("MODIFYPRODUCT") == true) {
             setFieldModify()
+            (activity as EmptyActivity).setTextHeader("Modifica Prodotto")
         }
 
     }
@@ -199,14 +201,23 @@ class ItemFragment : Fragment() {
                     }
                 }
             }
-            activity?.finish()
+
+            if (arguments?.getString("FROM") == "modify"){
+                requireActivity().supportFragmentManager.popBackStack()
+            } else {
+                activity?.finish()
+            }
         }
     }
 
     private fun setupCancelButton() {
         val cancel_btn = view?.findViewById<MaterialButton>(R.id.btn_cancel)
         cancel_btn?.setOnClickListener {
-            activity?.finish()
+            if (arguments?.getString("FROM") == "modify"){
+                requireActivity().supportFragmentManager.popBackStack()
+            } else {
+                activity?.finish()
+            }
         }
     }
 
