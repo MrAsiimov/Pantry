@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.MotionEvent
@@ -12,6 +14,8 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +28,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import android.Manifest
+import com.luca.pantry.Notification.ExpireNotificationReceiver
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: ProdottoAdapter
@@ -68,6 +74,9 @@ class MainActivity : BaseActivity() {
 
         buttonAnimationConfig()
         popupMenuCreate()
+        requestNotificationPermission()
+
+
 
     }
 
@@ -77,6 +86,14 @@ class MainActivity : BaseActivity() {
         super.onResume()
 
         setupRecyclerView()
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1002)
+            }
+        }
     }
 
     private fun showQuantityDialog(prodotto: Prodotto) {
