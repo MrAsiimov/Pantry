@@ -44,7 +44,7 @@ class PantryApp: Application() {
         createNotificationChannel()
 
         val now = LocalDateTime.now()
-        val targetTime = now.withHour(18).withMinute(52).withSecond(30)
+        val targetTime = now.withHour(19).withMinute(0).withSecond(0)
 
         val delay = Duration.between(now, targetTime)
         val initialDelay = if (delay.isNegative) delay.plusDays(1) else delay

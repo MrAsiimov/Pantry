@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Adapter.ProdottoAdapter
@@ -18,10 +22,13 @@ import com.luca.pantry.EntityDB.Prodotto
 import com.luca.pantry.PantryApp
 import com.luca.pantry.R
 import kotlinx.coroutines.launch
+import com.luca.pantry.ViewModel.ProdottoViewModel
+import com.luca.pantry.ViewModel.ProdottoViewModelFactory
 
 class ItemViewFragment : Fragment() {
     private lateinit var adapter: ProdottoAdapter
     private lateinit var recyclerView:  RecyclerView
+    private lateinit var viewModel: ProdottoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +45,15 @@ class ItemViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, ProdottoViewModelFactory(PantryApp.database.prodottoDao()))[ProdottoViewModel::class.java]
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.toastMessage.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         recyclerView = view.findViewById(R.id.all_items_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -91,8 +107,7 @@ class ItemViewFragment : Fragment() {
                 val newQuantity = input.text.toString().toIntOrNull()
                 if (newQuantity != null) {
                     lifecycleScope.launch {
-                        val updated = prodotto.copy(quantity = newQuantity)
-                        PantryApp.database.prodottoDao().update(updated)
+                        viewModel.updateQuantity(prodotto, newQuantity)
                         setupRecyclerView()
                     }
                 }
@@ -107,7 +122,7 @@ class ItemViewFragment : Fragment() {
             .setMessage("Sei sicuro di voler eliminare ${prodotto.productName}?")
             .setPositiveButton("Elimina") {_, _ ->
                 lifecycleScope.launch {
-                    PantryApp.database.prodottoDao().deleteProduct(prodotto)
+                    viewModel.delete(prodotto)
                     setupRecyclerView()
                 }
             }
@@ -121,13 +136,13 @@ class ItemViewFragment : Fragment() {
 
         if (container == null) {
             lifecycleScope.launch {
-                val prodotti = dao.getAllItems()
+                val prodotti = viewModel.getAllItem()
 
                 adapter.updateData(prodotti)
             }
         } else {
             lifecycleScope.launch {
-                val prodotti = dao.getItemsByContainer(container)
+                val prodotti = viewModel.getItemsByContainer(container)
 
                 adapter.updateData(prodotti)
             }

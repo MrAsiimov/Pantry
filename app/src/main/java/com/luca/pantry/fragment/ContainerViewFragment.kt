@@ -11,8 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,6 +25,10 @@ import com.luca.pantry.EmptyActivity
 import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.PantryApp
 import com.luca.pantry.R
+import com.luca.pantry.ViewModel.ContainerViewModel
+import com.luca.pantry.ViewModel.ContainerViewModelFactory
+import com.luca.pantry.ViewModel.ProdottoViewModel
+import com.luca.pantry.ViewModel.ProdottoViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -29,6 +37,7 @@ class ContainerViewFragment : Fragment() {
     private lateinit var adapter: ContainerAdapter
     private lateinit var addContainerButton: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: ContainerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +48,15 @@ class ContainerViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, ContainerViewModelFactory(PantryApp.database.containerDao()))[ContainerViewModel::class.java]
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.toastMessage.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         adapter = ContainerAdapter(
             containers = emptyList(),
@@ -82,7 +100,7 @@ class ContainerViewFragment : Fragment() {
                 val newName = input.text.toString()
 
                 lifecycleScope.launch {
-                    PantryApp.database.containerDao().updateNameContainer(oldName = container.nameContainer, newName = newName)
+                    viewModel.updateNameContainer(oldName = container.nameContainer, newName = newName)
                     setupRecyclerView()
                 }
             }
@@ -136,7 +154,7 @@ class ContainerViewFragment : Fragment() {
 
     private fun setupRecyclerView() {
         lifecycleScope.launch {
-            val containers = PantryApp.database.containerDao().getAllContainers()
+            val containers = viewModel.getAllContainers()
             adapter.updateData(containers)
         }
     }
