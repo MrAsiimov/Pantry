@@ -47,7 +47,7 @@ As a thesis prototype, the current version focuses on core functionality and loc
 
 ## 📷 Screenshots
 <div style="display: flex; flex-direction: row;">
-    <img src="Screenshot/Home.png" width="200" />
+    <img src="Screenshot/Home.jpg" width="200" />
     <img src="path/to/screenshot2.png" width="200" />
 </div>
 
