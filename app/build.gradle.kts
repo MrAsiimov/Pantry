@@ -37,11 +37,19 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+}
+
+kapt {
+    arguments {
+        arg ("room.schemaLocation", "$projectDir/schemas")
     }
 }
 
 dependencies {
     implementation ("androidx.room:room-runtime:2.8.0")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.16.0")
     kapt ("androidx.room:room-compiler:2.8.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")

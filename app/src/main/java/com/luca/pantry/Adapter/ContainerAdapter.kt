@@ -20,7 +20,7 @@ class ContainerAdapter(
     private val onChangeImage: (Container) -> Unit,
     private val onDelete: (Container) -> Unit,
     private val onContainerClick: (Container) -> Unit
-    ): RecyclerView.Adapter<ContainerAdapter.ContainerViewHolder>() {
+): RecyclerView.Adapter<ContainerAdapter.ContainerViewHolder>() {
     class ContainerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image = itemView.findViewById<ImageView>(R.id.image_container_icon)
         val name = itemView.findViewById<TextView>(R.id.text_container_nome)
@@ -34,10 +34,10 @@ class ContainerAdapter(
     override fun onBindViewHolder(holder: ContainerViewHolder, position: Int) {
         val container = containers[position]
 
-        holder.name.text = container.nameContainer
+        holder.name.text = container.name
 
         val drawableId = holder.itemView.context.resources.getIdentifier(
-            container.imageuri,
+            container.iconKey,
             "drawable",
             holder.itemView.context.packageName
         )

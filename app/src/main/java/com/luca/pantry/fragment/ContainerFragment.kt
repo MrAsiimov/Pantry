@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.luca.pantry.Database.CurrentHousehold
 import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.PantryApp
 import com.luca.pantry.R
@@ -67,16 +68,35 @@ class ContainerFragment : Fragment() {
 
     private fun setupSaveButton() {
         save_button.setOnClickListener {
-            var container_name = textContainerNameEdit.text.toString()
+            var containerName = textContainerNameEdit.text.toString().trim()
+            val iconKey = selectedImageName
 
-            if (container_name.isNotEmpty() && selectedImageName != null) {
-                val container = Container( nameContainer = container_name, imageuri = selectedImageName!!)
-
+            if (containerName.isNotEmpty() && iconKey != null) {
+                save_button.isEnabled = false
                 lifecycleScope.launch {
-                    PantryApp.database.containerDao().addContainer(container)
-                    Toast.makeText(requireContext(), "Contitore aggiunto", Toast.LENGTH_SHORT).show()
+                    val householdId = CurrentHousehold.id()
+                    val dao = PantryApp.database.containerDao()
+
+                    if (dao.countByName(householdId, containerName, "") > 0) {
+                        Toast.makeText(requireContext(), "Esiste già un contenitore con questo nome", Toast.LENGTH_SHORT).show()
+                        save_button.isEnabled = true
+                        return@launch
+                    }
+
+                    val now = System.currentTimeMillis()
+                    dao.addContainer(
+                        Container(
+                            householdId = householdId,
+                            name = containerName,
+                            iconKey = iconKey,
+                            createdAt = now,
+                            updatedAt = now
+                        )
+                    )
+
+                    Toast.makeText(requireContext(), "Contenitore aggiunto", Toast.LENGTH_SHORT).show()
+                    activity?.finish()
                 }
-                activity?.finish()
             } else {
                 Toast.makeText(requireContext(), "Compila tutti i campi", Toast.LENGTH_SHORT).show()
             }

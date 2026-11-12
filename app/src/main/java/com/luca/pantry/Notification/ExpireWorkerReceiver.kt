@@ -13,19 +13,20 @@ import androidx.work.WorkerParameters
 import com.luca.pantry.Database.DB
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import androidx.work.CoroutineWorker
 
-class ExpireWorkerReceiver(context: Context, params: WorkerParameters): Worker(context, params) {
-    override fun doWork(): Result {
-        val prodotti = runBlocking { DB.prodottoDao.getAllItems() }
+class ExpireWorkerReceiver(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val prodotti = DB.prodottoDao.getAllActiveItems()
         val today = LocalDate.now()
 
         val inScadenza = prodotti.filter {
-            val expiry = runCatching { LocalDate.parse(it.expiringDate) }.getOrNull()
+            val expiry = runCatching { LocalDate.parse(it.expiryDate) }.getOrNull()
             expiry != null && expiry.isBefore(today.plusDays(15)) && expiry.isAfter(today.minusDays(1))
         }
 
         if (inScadenza.isNotEmpty() && (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ActivityCompat.checkSelfPermission(applicationContext,
-            Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)) {
+                Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)) {
             val builder = NotificationCompat.Builder(applicationContext, "expiring_channel")
                 .setSmallIcon(R.drawable.ic_dialog_info)
                 .setContentTitle("Prodotti in scadenza")

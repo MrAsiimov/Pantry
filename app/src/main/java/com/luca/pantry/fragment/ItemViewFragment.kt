@@ -1,7 +1,6 @@
 package com.luca.pantry.fragment
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import androidx.fragment.app.Fragment
@@ -9,15 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Adapter.ProdottoAdapter
-import com.luca.pantry.EmptyActivity
+import com.luca.pantry.Database.CurrentHousehold
 import com.luca.pantry.EntityDB.Prodotto
 import com.luca.pantry.PantryApp
 import com.luca.pantry.R
@@ -47,13 +43,6 @@ class ItemViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this, ProdottoViewModelFactory(PantryApp.database.prodottoDao()))[ProdottoViewModel::class.java]
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.toastMessage.collect { message ->
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         recyclerView = view.findViewById(R.id.all_items_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -64,12 +53,14 @@ class ItemViewFragment : Fragment() {
                 val itemFragment = ItemFragment().apply {
                     arguments = Bundle().apply {
                         putString("ORIGIN", "modifyproduct")
-                        putString("NAMEPRODUCT", prodotto.productName)
+                        putString("PRODUCTID", prodotto.id)
+                        putString("CONTAINERID", prodotto.containerId)
+                        putString("NAMEPRODUCT", prodotto.name)
                         putInt("QUANTITYPRODUCT", prodotto.quantity)
-                        putString("EXPIREDATEPRODUCT", prodotto.expiringDate)
-                        putString("CONTAINERPRODUCT", prodotto.container)
+                        putString("EXPIREDATEPRODUCT", prodotto.expiryDate)
                         putString("BARCODEPRODUCT", prodotto.barcode)
                         putString("IMAGEPRODUCT", prodotto.imageUrl)
+                        putLong("CREATEDATPRODUCT", prodotto.createdAt)
                         putBoolean("MODIFYPRODUCT", true)
                         putString("FROM", "modify")
                     }
@@ -119,7 +110,7 @@ class ItemViewFragment : Fragment() {
     private fun deleteProduct(prodotto: Prodotto) {
         AlertDialog.Builder(requireContext())
             .setTitle("Elimina prodotto")
-            .setMessage("Sei sicuro di voler eliminare ${prodotto.productName}?")
+            .setMessage("Sei sicuro di voler eliminare ${prodotto.name}?")
             .setPositiveButton("Elimina") {_, _ ->
                 lifecycleScope.launch {
                     viewModel.delete(prodotto)
@@ -131,22 +122,15 @@ class ItemViewFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val dao = PantryApp.database.prodottoDao()
-        val container = arguments?.getString("CONTAINER")
+        val containerId = arguments?.getString("CONTAINER_ID")
 
-        if (container == null) {
-            lifecycleScope.launch {
-                val prodotti = viewModel.getAllItem()
-
-                adapter.updateData(prodotti)
+        lifecycleScope.launch {
+            val prodotti = if (containerId == null) {
+                viewModel.getAllItem()
+            } else {
+                viewModel.getItemsByContainer(containerId)
             }
-        } else {
-            lifecycleScope.launch {
-                val prodotti = viewModel.getItemsByContainer(container)
-
-                adapter.updateData(prodotti)
-            }
+            adapter.updateData(prodotti, CurrentHousehold.containerNames())
         }
-
     }
 }

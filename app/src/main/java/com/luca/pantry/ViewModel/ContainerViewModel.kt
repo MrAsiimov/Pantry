@@ -1,32 +1,27 @@
 package com.luca.pantry.ViewModel
 
 import androidx.lifecycle.ViewModel
+import com.luca.pantry.Database.CurrentHousehold
 import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.dao.ContainerDao
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 
 class ContainerViewModel (private val dao: ContainerDao): ViewModel() {
-    private val _toastMessage = MutableSharedFlow<String>(replay = 1)
-    val toastMessage: SharedFlow<String> = _toastMessage
-
     suspend fun getAllContainers(): List<Container> {
-        _toastMessage.emit("Lista aggiornata da viewmodel")
-        return dao.getAllContainers()
+        return dao.getContainers(CurrentHousehold.id())
     }
 
     suspend fun addContainer(container: Container) {
-        _toastMessage.emit("Container aggiunto da viewmodel")
         dao.addContainer(container)
     }
 
-    suspend fun deleteContainer(container: Container) {
-        _toastMessage.emit("Container eliminato da viewmodel")
-        dao.deleteContainer(container.nameContainer)
+    suspend fun renameContainer(container: Container, newName: String) {
+        dao.rename(container.id, newName, System.currentTimeMillis())
     }
 
-    suspend fun updateNameContainer(oldName: String, newName: String) {
-        _toastMessage.emit("Nome container aggiornato da viewmodel")
-        dao.updateNameContainer(oldName, newName)
+    suspend fun updateIcon(container: Container, iconKey: String) {
+        dao.updateIcon(container.id, iconKey, System.currentTimeMillis())
     }
+
+    suspend fun isNameTaken(name: String, excludeId: String = ""): Boolean = dao.countByName(
+        CurrentHousehold.id(), name, excludeId) > 0
 }

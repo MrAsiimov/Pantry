@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.luca.pantry.Adapter.ProdottoAdapter
 import com.luca.pantry.Add.AddItemActivity
-import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.EntityDB.Prodotto
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -29,7 +28,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import android.Manifest
-import com.luca.pantry.Notification.ExpireNotificationReceiver
+import com.luca.pantry.Database.CurrentHousehold
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: ProdottoAdapter
@@ -56,14 +55,16 @@ class MainActivity : BaseActivity() {
             prodotti = emptyList(),
             onRename = { prodotto -> val intent = Intent(this, EmptyActivity::class.java).apply {
                 putExtra("ORIGIN", "modifyproduct")
-                putExtra("NAMEPRODUCT", prodotto.productName)
+                putExtra("PRODUCTID", prodotto.id)
+                putExtra("CONTAINERID", prodotto.containerId)
+                putExtra("NAMEPRODUCT", prodotto.name)
                 putExtra("QUANTITYPRODUCT", prodotto.quantity)
-                putExtra("EXPIREDATEPRODUCT", prodotto.expiringDate)
-                putExtra("CONTAINERPRODUCT", prodotto.container)
+                putExtra("EXPIREDATEPRODUCT", prodotto.expiryDate)
                 putExtra("BARCODEPRODUCT", prodotto.barcode)
                 putExtra("IMAGEPRODUCT", prodotto.imageUrl)
+                putExtra("CREATEDATPRODUCT", prodotto.createdAt)
                 putExtra("FROM", "new")
-                }
+            }
                 startActivity(intent)
             },
             onChangeQuantity = { prodotto -> showQuantityDialog(prodotto) },
@@ -75,12 +76,7 @@ class MainActivity : BaseActivity() {
         buttonAnimationConfig()
         popupMenuCreate()
         requestNotificationPermission()
-
-
-
     }
-
-
 
     override fun onResume() {
         super.onResume()
@@ -109,7 +105,11 @@ class MainActivity : BaseActivity() {
                 val newQuantity = input.text.toString().toIntOrNull()
                 if (newQuantity != null) {
                     lifecycleScope.launch {
-                        val updated = prodotto.copy(quantity = newQuantity)
+                        val updated = prodotto.copy(
+                            quantity = newQuantity,
+                            updatedAt = System.currentTimeMillis(),
+                            syncState = 1
+                        )
                         PantryApp.database.prodottoDao().update(updated)
                         setupRecyclerView()
                     }
@@ -122,10 +122,10 @@ class MainActivity : BaseActivity() {
     private fun deleteProduct(prodotto: Prodotto) {
         AlertDialog.Builder(this)
             .setTitle("Elimina prodotto")
-            .setMessage("Sei sicuro di voler eliminare ${prodotto.productName}?")
+            .setMessage("Sei sicuro di voler eliminare ${prodotto.name}?")
             .setPositiveButton("Elimina") {_, _ ->
                 lifecycleScope.launch {
-                    PantryApp.database.prodottoDao().deleteProduct(prodotto)
+                    PantryApp.database.prodottoDao().softDelete(prodotto.id, System.currentTimeMillis())
                     setupRecyclerView()
                 }
             }
@@ -156,8 +156,15 @@ class MainActivity : BaseActivity() {
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.add_item -> {
-                        val intent = Intent(this, AddItemActivity::class.java)
-                        startActivity(intent)
+                        lifecycleScope.launch {
+                            val hasContainers = PantryApp.database.containerDao()
+                                .conutContainers(CurrentHousehold.id()) > 0
+                            if (hasContainers) {
+                                startActivity(Intent (this@MainActivity, AddItemActivity::class.java))
+                            } else {
+                                showNoContainerDialog()
+                            }
+                        }
                         true
                     }
                     R.id.add_container -> {
@@ -175,11 +182,24 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    private fun showNoContainerDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Nessun contenitore")
+            .setMessage("Per aggiungere un prodotto devi prima creare almeno un contenitore.")
+            .setPositiveButton("Crea contenitore") {_, _ ->
+                startActivity(Intent(this, EmptyActivity::class.java).apply {
+                    putExtra("ORIGIN", "addcontainer")
+                })
+            }
+            .setNegativeButton("Annulla", null)
+            .show()
+    }
+
     private fun setupRecyclerView() {
         val dao = PantryApp.database.prodottoDao()
 
         lifecycleScope.launch {
-            val products = dao.getAllItems()
+            val products = dao.getAllItems(CurrentHousehold.id())
             val today = Date()
             val limit = Calendar.getInstance().apply {
                 time = today
@@ -189,11 +209,11 @@ class MainActivity : BaseActivity() {
             val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
 
             val expiring_items = products.filter {
-                val expire_date = formatter.parse(it.expiringDate)
+                val expire_date = formatter.parse(it.expiryDate)
                 expire_date != null && expire_date.before(limit)
             }
 
-            adapter.updateData(expiring_items)
+            adapter.updateData(expiring_items, CurrentHousehold.containerNames())
         }
     }
 

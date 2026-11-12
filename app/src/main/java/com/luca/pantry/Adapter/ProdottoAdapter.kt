@@ -1,6 +1,5 @@
 package com.luca.pantry.Adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.luca.pantry.EntityDB.Container
 import com.luca.pantry.R
 import com.luca.pantry.EntityDB.Prodotto
 import java.text.SimpleDateFormat
@@ -21,7 +19,9 @@ class ProdottoAdapter(
     private val onRename: (Prodotto) -> Unit,
     private val onChangeQuantity: (Prodotto) -> Unit,
     private val onDelete: (Prodotto) -> Unit
-    ): RecyclerView.Adapter<ProdottoAdapter.ProdottoViewHolder>() {
+): RecyclerView.Adapter<ProdottoAdapter.ProdottoViewHolder>() {
+
+    private var containerNames: Map<String, String> = emptyMap()
     class ProdottoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name = itemView.findViewById<TextView>(R.id.text_nome)
         val quantity = itemView.findViewById<TextView>(R.id.text_quantita)
@@ -38,10 +38,10 @@ class ProdottoAdapter(
 
     override fun onBindViewHolder(holder: ProdottoViewHolder, position: Int) {
         val prodotto = prodotti[position]
-        val savedDate = prodotto.expiringDate
-        holder.name.text = prodotto.productName
+        val savedDate = prodotto.expiryDate
+        holder.name.text = prodotto.name
         holder.quantity.text = prodotto.quantity.toString()
-        holder.container.text = prodotto.container
+        holder.container.text = containerNames[prodotto.containerId].orEmpty()
 
         if (!prodotto.imageUrl.isNullOrEmpty()){
             Glide.with(holder.itemView.context)
@@ -75,8 +75,9 @@ class ProdottoAdapter(
 
     override fun getItemCount(): Int = prodotti.size
 
-    fun updateData(newProdotti: List<Prodotto>) {
+    fun updateData(newProdotti: List<Prodotto>, newContainerNames: Map<String, String>) {
         prodotti = newProdotti
+        containerNames = newContainerNames
         notifyDataSetChanged()
     }
 

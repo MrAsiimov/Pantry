@@ -13,12 +13,11 @@ import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.withTransaction
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.luca.pantry.Adapter.ContainerAdapter
 import com.luca.pantry.EmptyActivity
@@ -27,8 +26,6 @@ import com.luca.pantry.PantryApp
 import com.luca.pantry.R
 import com.luca.pantry.ViewModel.ContainerViewModel
 import com.luca.pantry.ViewModel.ContainerViewModelFactory
-import com.luca.pantry.ViewModel.ProdottoViewModel
-import com.luca.pantry.ViewModel.ProdottoViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -50,13 +47,6 @@ class ContainerViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this, ContainerViewModelFactory(PantryApp.database.containerDao()))[ContainerViewModel::class.java]
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.toastMessage.collect { message ->
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         adapter = ContainerAdapter(
             containers = emptyList(),
@@ -64,12 +54,12 @@ class ContainerViewFragment : Fragment() {
             onChangeImage = { container -> openImageSelector(container) },
             onDelete = { container -> deleteContainer(container) },
             onContainerClick = { container -> val fragment = ItemViewFragment().apply {
-                arguments = bundleOf("CONTAINER" to container.nameContainer)
+                arguments = bundleOf("CONTAINER" to container.name, "CONTAINER_ID" to container.id)
             }
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.empty_fragment, fragment)
-                .addToBackStack(null)
-                .commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.empty_fragment, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         )
 
@@ -91,16 +81,26 @@ class ContainerViewFragment : Fragment() {
 
     private fun showRenameDialog(container: Container) {
         val input = EditText(requireContext())
-        input.setText(container.nameContainer)
+        input.setText(container.name)
 
         AlertDialog.Builder(requireContext())
             .setTitle("Modifica nome")
             .setView(input)
             .setPositiveButton("Salva") {_, _ ->
-                val newName = input.text.toString()
+                val newName = input.text.toString().trim()
+
+                if (newName.isEmpty()) {
+                    Toast.makeText(requireContext(), "Il nome non può essere vuoto", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                if (newName == container.name) return@setPositiveButton
 
                 lifecycleScope.launch {
-                    viewModel.updateNameContainer(oldName = container.nameContainer, newName = newName)
+                    if (viewModel.isNameTaken(newName, container.id)) {
+                        Toast.makeText(requireContext(), "Esiste già un contenitore con questo nome", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    viewModel.renameContainer(container, newName)
                     setupRecyclerView()
                 }
             }
@@ -115,26 +115,29 @@ class ContainerViewFragment : Fragment() {
             R.drawable.ic_pantry,
             R.drawable.ic_container
         )
-            val dialog = ImagePickerDialogFragment(imageOptions) { selectedDrawableId ->
-                val imageName = resources.getResourceEntryName(selectedDrawableId)
+        val dialog = ImagePickerDialogFragment(imageOptions) { selectedDrawableId ->
+            val imageName = resources.getResourceEntryName(selectedDrawableId)
 
-                lifecycleScope.launch {
-                    PantryApp.database.containerDao().updateImageContainer(nameContainer = container.nameContainer, imageName = imageName)
-                    setupRecyclerView()
-                }
+            lifecycleScope.launch {
+                viewModel.updateIcon(container, imageName)
+                setupRecyclerView()
             }
-            dialog.show(childFragmentManager, "ImagePicker")
+        }
+        dialog.show(childFragmentManager, "ImagePicker")
 
     }
 
     private fun deleteContainer(container: Container) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Elimina contaienr")
-            .setMessage("Sei sicuro di voler eliminare il container ${container.nameContainer}? Tutti i prodotti all'interno verranno cancellati")
+            .setTitle("Elimina container")
+            .setMessage("Sei sicuro di voler eliminare il container ${container.name}? Tutti i prodotti all'interno verranno cancellati")
             .setPositiveButton("Elimina") {_, _ ->
                 lifecycleScope.launch {
-                    PantryApp.database.prodottoDao().deleteItemsByContainer(container.nameContainer)
-                    PantryApp.database.containerDao().deleteContainer(container.nameContainer)
+                    val now = System.currentTimeMillis()
+                    PantryApp.database.withTransaction {
+                        PantryApp.database.prodottoDao().softDeleteByContainer(container.id, now)
+                        PantryApp.database.containerDao().softDelete(container.id, now)
+                    }
                     setupRecyclerView()
                 }
             }

@@ -1,25 +1,20 @@
 package com.luca.pantry
 
-import android.app.AlarmManager
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.room.Room
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.luca.pantry.Database.DB
 import com.luca.pantry.Database.DatabaseApp
-import com.luca.pantry.Notification.ExpireNotificationReceiver
+import com.luca.pantry.Network.MissingImageWorker
 import com.luca.pantry.Notification.ExpireWorkerReceiver
 import com.luca.pantry.dao.ContainerDao
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class PantryApp: Application() {
@@ -39,8 +34,6 @@ class PantryApp: Application() {
             .fallbackToDestructiveMigration()
             .build()
 
-        DB.init(this)
-
         createNotificationChannel()
 
         val now = LocalDateTime.now()
@@ -59,29 +52,7 @@ class PantryApp: Application() {
             workRequest
         )
 
-
-
-        /*val intent = Intent(this, ExpireNotificationReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 18)
-            set(Calendar.MINUTE, 5)
-            set(Calendar.SECOND, 30)
-            set(Calendar.MILLISECOND, 0)
-
-            if (before(Calendar.getInstance())) {
-                add(Calendar.DAY_OF_MONTH, 1)
-            }
-        }
-
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent )*/
+        MissingImageWorker.enqueue(this)
     }
 
     private fun createNotificationChannel() {

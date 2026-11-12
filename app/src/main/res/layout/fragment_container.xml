@@ -21,7 +21,6 @@
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_notfound"
-            android:background="@drawable/image_border"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:clickable="true"

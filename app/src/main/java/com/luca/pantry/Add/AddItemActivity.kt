@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
+import androidx.camera.camera2.internal.FovUtil
 import com.google.android.material.button.MaterialButton
 import com.luca.pantry.BaseActivity
 import com.luca.pantry.EmptyActivity
@@ -18,8 +19,12 @@ import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
 import org.json.JSONObject
+import androidx.lifecycle.lifecycleScope
+import com.luca.pantry. Network.OpenFoodFactsClient
+import kotlinx.coroutines.launch
 
 class AddItemActivity : BaseActivity(), CameraFragment.BarcodeCallback {
+    private var lookupInProgress = false
 
     protected lateinit var add_manually_btn: MaterialButton
     protected lateinit var cancel_btn: MaterialButton
@@ -109,42 +114,27 @@ class AddItemActivity : BaseActivity(), CameraFragment.BarcodeCallback {
     }
 
     override fun onBarcodeScanned(code: String) {
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url("https://world.openfoodfacts.org/api/v0/product/$code.json")
-            .build()
+        if (lookupInProgress) return
+        lookupInProgress = true
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d("OpenFoodFacts", "Errore: ${e.message}")
+        lifecycleScope.launch {
+            val found = OpenFoodFactsClient.lookup(code)
+            lookupInProgress = false
+
+            if (found == null) {
+                Toast.makeText(this@AddItemActivity, "Prodotto non trovato", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                val json = JSONObject(body)
-                val status = json.optInt("status")
+            val intent = Intent(this@AddItemActivity, EmptyActivity::class.java).apply {
+                putExtra("ORIGIN", "addcamera")
+                putExtra("BARCODE", code)
 
-                val intent = Intent(this@AddItemActivity, EmptyActivity::class.java).apply {
-                    putExtra("ORIGIN", "addcamera")
-                    putExtra("BARCODE", code)
-
-                    if (status == 1) {
-                        val product = json.getJSONObject("product")
-                        val name = product.optString("product_name")
-                        val imageUrl = product.optString("image_url")
-
-                        putExtra("NAME", name)
-                        putExtra("IMAGEURL", imageUrl)
-                    }
-                }
-
-                runOnUiThread {
-                    if (status != 1) {
-                        Toast.makeText(this@AddItemActivity, "Prodotto non trovato", Toast.LENGTH_SHORT).show()
-                    }
-                    startActivity(intent)
+                if (found != null) {
+                    putExtra("NAME", found.name ?: "")
+                    putExtra("IMAGEURL", found.imageUrl ?: "")
                 }
             }
-        })
+            startActivity(intent)
+        }
     }
 }

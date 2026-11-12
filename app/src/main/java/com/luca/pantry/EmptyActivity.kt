@@ -90,7 +90,7 @@ class EmptyActivity : BaseActivity() {
                 val imageurl = intent.getStringExtra("IMAGEURL")
 
                 var bundle = if (name != null && imageurl != null) {
-                        bundleOf(
+                    bundleOf(
                         "SHOWBARCODE" to true,
                         "BARCODE" to barcode,
                         "NAME" to name,
@@ -110,30 +110,23 @@ class EmptyActivity : BaseActivity() {
             "modifyproduct" -> {
                 setTextHeader("Modifica Prodotto")
 
-                val name = intent.getStringExtra("NAMEPRODUCT")
-                val quantity = intent.getIntExtra("QUANTITYPRODUCT", 0)
-                val expiredate = intent.getStringExtra("EXPIREDATEPRODUCT")
-                val container = intent.getStringExtra("CONTAINERPRODUCT")
-                val barcode = intent.getStringExtra("BARCODEPRODUCT")
-                val imageurl = intent.getStringExtra("IMAGEPRODUCT")
-                val from = intent.getStringExtra("FROM")
-
                 val bundle = bundleOf(
-                    "NAMEPRODUCT" to name,
-                    "QUANTITYPRODUCT" to quantity,
-                    "EXPIREDATEPRODUCT" to expiredate,
-                    "CONTAINERPRODUCT" to container,
-                    "BARCODEPRODUCT" to barcode,
-                    "IMAGEPRODUCT" to imageurl,
+                    "PRODUCTID" to intent.getStringExtra("PRODUCTID"),
+                    "CONTAINERID" to intent.getStringExtra("CONTAINERID"),
+                    "NAMEPRODUCT" to intent.getStringExtra("NAMEPRODUCT"),
+                    "QUANTITYPRODUCT" to intent.getIntExtra("QUANTITYPRODUCT", 0),
+                    "EXPIREDATEPRODUCT" to intent.getStringExtra("EXPIREDATEPRODUCT"),
+                    "BARCODEPRODUCT" to intent.getStringExtra("BARCODEPRODUCT"),
+                    "IMAGEPRODUCT" to intent.getStringExtra("IMAGEPRODUCT"),
+                    "CREATEDATPRODUCT" to intent.getLongExtra("CREATEDATPRODUCT", 0L),
                     "MODIFYPRODUCT" to true,
-                    "FROM" to from
+                    "FROM" to intent.getStringExtra("FROM")
                 )
                 val itemFragment = ItemFragment()
                 itemFragment.arguments = bundle
 
                 supportFragmentManager.beginTransaction()
                     .replace(fragment, itemFragment)
-                    .addToBackStack(null)
                     .commit()
             }
             "allitems" -> {
