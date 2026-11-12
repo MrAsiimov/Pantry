@@ -58,4 +58,4 @@ Computer Engineering Graduate
 * [LinkedIn] https://www.linkedin.com/in/luca-rizzo-274367199/
 
 ---
-*Developed for academic purposes at [Nome Università].*
+*Developed for academic purposes at Universitas Mercatorum.*
